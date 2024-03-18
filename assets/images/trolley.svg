@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24.001" height="20" viewBox="0 0 24.001 20">
+  <g id="trolley" transform="translate(0 -4)">
+    <path id="Path_748" data-name="Path 748" d="M19.091,19H10.1a2.907,2.907,0,0,1-2.8-2.07l-3.04-10.3A.9.9,0,0,0,3.382,6H1A1,1,0,0,1,1,4H3.382a2.905,2.905,0,0,1,2.8,2.07L6.748,8h15.3a1.972,1.972,0,0,1,1.583.8,1.889,1.889,0,0,1,.288,1.7l-2.063,6.548A2.9,2.9,0,0,1,19.091,19Zm2.953-9h.01Z" fill="#fff"/>
+    <path id="Path_749" data-name="Path 749" d="M11,24a2,2,0,1,1,2-2A2,2,0,0,1,11,24Zm0-2h0Z" fill="#fff"/>
+    <path id="Path_750" data-name="Path 750" d="M18,24a2,2,0,1,1,2-2A2,2,0,0,1,18,24Zm0-2h0Z" fill="#fff"/>
+  </g>
+</svg>

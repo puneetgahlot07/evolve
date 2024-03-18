@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 35 35">
+  <g id="diagram" transform="translate(-0.003 0.001)">
+    <g id="Group_143" data-name="Group 143" transform="translate(2.92 3.5)">
+      <g id="Group_142" data-name="Group 142">
+        <rect id="Rectangle_40" data-name="Rectangle 40" width="7.583" height="1.167" fill="#fff"/>
+      </g>
+    </g>
+    <g id="Group_145" data-name="Group 145" transform="translate(2.92 5.833)">
+      <g id="Group_144" data-name="Group 144">
+        <rect id="Rectangle_41" data-name="Rectangle 41" width="7.583" height="1.167" fill="#fff"/>
+      </g>
+    </g>
+    <g id="Group_147" data-name="Group 147" transform="translate(2.92 8.166)">
+      <g id="Group_146" data-name="Group 146">
+        <rect id="Rectangle_42" data-name="Rectangle 42" width="5.25" height="1.167" fill="#fff"/>
+      </g>
+    </g>
+    <g id="Group_149" data-name="Group 149" transform="translate(2.92 10.5)">
+      <g id="Group_148" data-name="Group 148">
+        <rect id="Rectangle_43" data-name="Rectangle 43" width="5.25" height="1.167" fill="#fff"/>
+      </g>
+    </g>
+    <g id="Group_151" data-name="Group 151" transform="translate(0.003 33.833)">
+      <g id="Group_150" data-name="Group 150" transform="translate(0)">
+        <rect id="Rectangle_44" data-name="Rectangle 44" width="35" height="1.167" fill="#fff"/>
+      </g>
+    </g>
+    <g id="Group_153" data-name="Group 153" transform="translate(2.287 -0.001)">
+      <g id="Group_152" data-name="Group 152">
+        <path id="Path_528" data-name="Path 528" d="M62.811,4.989,60.478.323A.583.583,0,0,0,59.7.061h0L55.028,2.394a.584.584,0,0,0,.521,1.044l3.38-1.689-.922,2.633a31.129,31.129,0,0,1-26.684,20.7l.1,1.167A32.3,32.3,0,0,0,59.109,4.768l.941-2.69,1.716,3.433a.584.584,0,1,0,1.044-.521Z" transform="translate(-31.323 0.001)" fill="#fff"/>
+      </g>
+    </g>
+    <g id="Group_155" data-name="Group 155" transform="translate(2.336 28)">
+      <g id="Group_154" data-name="Group 154">
+        <path id="Path_529" data-name="Path 529" d="M36.67,384.006H32.586a.583.583,0,0,0-.583.583v3.5a.583.583,0,0,0,.583.583H36.67a.583.583,0,0,0,.583-.583v-3.5A.583.583,0,0,0,36.67,384.006Zm-.583,3.5H33.17v-2.333h2.917Z" transform="translate(-32.003 -384.006)" fill="#fff"/>
+      </g>
+    </g>
+    <g id="Group_157" data-name="Group 157" transform="translate(8.753 26.25)">
+      <g id="Group_156" data-name="Group 156">
+        <path id="Path_530" data-name="Path 530" d="M124.67,360.006h-4.083a.583.583,0,0,0-.583.583v5.25a.583.583,0,0,0,.583.583h4.083a.583.583,0,0,0,.583-.583v-5.25A.583.583,0,0,0,124.67,360.006Zm-.583,5.25H121.17v-4.083h2.917Z" transform="translate(-120.003 -360.006)" fill="#fff"/>
+      </g>
+    </g>
+    <g id="Group_159" data-name="Group 159" transform="translate(15.169 23.333)">
+      <g id="Group_158" data-name="Group 158">
+        <path id="Path_531" data-name="Path 531" d="M212.67,320.006h-4.083a.583.583,0,0,0-.583.583v8.167a.583.583,0,0,0,.583.583h4.083a.583.583,0,0,0,.583-.583v-8.167A.583.583,0,0,0,212.67,320.006Zm-.583,8.167H209.17v-7h2.917Z" transform="translate(-208.003 -320.006)" fill="#fff"/>
+      </g>
+    </g>
+    <g id="Group_161" data-name="Group 161" transform="translate(21.586 19.25)">
+      <g id="Group_160" data-name="Group 160">
+        <path id="Path_532" data-name="Path 532" d="M300.67,264.006h-4.083a.583.583,0,0,0-.583.583v12.25a.583.583,0,0,0,.583.583h4.083a.583.583,0,0,0,.583-.583v-12.25A.583.583,0,0,0,300.67,264.006Zm-.583,12.25H297.17V265.173h2.917Z" transform="translate(-296.003 -264.006)" fill="#fff"/>
+      </g>
+    </g>
+    <g id="Group_163" data-name="Group 163" transform="translate(28.003 11.083)">
+      <g id="Group_162" data-name="Group 162" transform="translate(0)">
+        <path id="Path_533" data-name="Path 533" d="M388.67,152.006h-4.083a.583.583,0,0,0-.583.583v20.416a.583.583,0,0,0,.583.583h4.083a.583.583,0,0,0,.583-.583V152.589A.583.583,0,0,0,388.67,152.006Zm-.583,20.416H385.17v-19.25h2.917Z" transform="translate(-384.003 -152.006)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>

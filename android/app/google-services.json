@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "778271612159",
+    "project_id": "evolve-29e14",
+    "storage_bucket": "evolve-29e14.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778271612159:android:5f2ef0e5cdc09810b980ca",
+        "android_client_info": {
+          "package_name": "com.app.evolve"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyjZlfEqHGBCxWMq_Y_f04hAon7bb9RZo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
