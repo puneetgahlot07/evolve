@@ -36,6 +36,7 @@ class ApiHandler{
     )
     );
      print('response: ${response}');
+     print('API URL: ${apiName}');
     var res = response.data;
     print('Status Code: ${response.statusCode}');
     print('Response Body $apiName:\n $res');   

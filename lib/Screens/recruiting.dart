@@ -23,6 +23,13 @@ class RecruitingScreen extends StatefulWidget {
 class _RecruitingScreenState extends State<RecruitingScreen> {
 
   final controller = Get.find<RecruitingController>();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // print(' Argument --> ${Get.arguments['categoryId']}');
+    // controller.getSubCategoryApi(categoryId: Get.arguments['categoryId']);
+  }
 
   @override
   Widget build(BuildContext context) {

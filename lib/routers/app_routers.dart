@@ -15,7 +15,9 @@ import 'package:evolve/Screens/your_items_screen.dart';
 import 'package:evolve/common-widgets/custom_bottom_navigation.dart';
 import 'package:get/get.dart';
 
+import '../Screens/home/sub_category_list_screen.dart';
 import '../Screens/other/my_subscriptions.dart';
+import '../Screens/pages/cms_pages_screen.dart';
 
 class AppRoutes {
 
@@ -36,6 +38,8 @@ class AppRoutes {
   static String helpDeskScreen = '/helpDeskScreen';
   static String detailScreen = '/DetailScreen';
   static String planDetailsScreen = '/PlanDetailsScreen';
+  static String cmsPagesScreen = '/CMSPagesScreen';
+  static String subCategoryListScreen = '/SubCategoryListScreen';
 
   
 
@@ -50,17 +54,17 @@ class AppRoutes {
     // Login
     GetPage(
       name: AppRoutes.loginScreen,
-      page: () => Login(),
+      page: () => const Login(),
     ),
     // SignUp
     GetPage(
       name: AppRoutes.signUpScreen,
-      page: () => SignUp(),
+      page: () => const SignUp(),
     ),
     // payrollFlowChartScreen
     GetPage(
       name: AppRoutes.payrollFlowChartScreen,
-      page: () => PayrollFlowChart(),
+      page: () => const PayrollFlowChart(),
     ),
 
     GetPage(
@@ -69,49 +73,57 @@ class AppRoutes {
     ),
     GetPage(
     name: AppRoutes.mySubscription, 
-    page: () => MySubscription(),
+    page: () => const MySubscription(),
     ),
     GetPage(
     name: AppRoutes.availableSubscription, 
-    page: () => AvailableSubscription(),
+    page: () => const AvailableSubscription(),
     ),
      GetPage(
     name: AppRoutes.cardFormScreen, 
-    page: () => CardFormScreen(),
+    page: () => const CardFormScreen(),
     ),
 
     // RecruitingScreen
     GetPage(
       name: AppRoutes.recruitingScreen,
-      page: () => RecruitingScreen(),
+      page: () => const RecruitingScreen(),
     ),
     // RecruitingScreen
     GetPage(
       name: AppRoutes.paymentSuccessScreen,
-      page: () => PaymentSuccess(),
+      page: () => const PaymentSuccess(),
     ),GetPage(
       name: AppRoutes.chooseCategoryScreen,
-      page: () => ChooseCategory(),
+      page: () => const ChooseCategory(),
     ),
     GetPage(
       name: AppRoutes.yourItemsScreen,
-      page: () => YourItems(),
+      page: () => const YourItems(),
     ),
     GetPage(
       name: AppRoutes.subscriptionScreen,
-      page: () => SubscriptionScreen(),
+      page: () => const SubscriptionScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.cmsPagesScreen,
+      page: () => const CMSPagesScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.subCategoryListScreen,
+      page: () => const SubCategoryListScreen(),
     ),
     GetPage(
       name: AppRoutes.helpDeskScreen,
-      page: () => HelpDeskScreen(),
+      page: () => const HelpDeskScreen(),
     ),
     GetPage(
       name: AppRoutes.detailScreen,
-      page: () => DetailScreen(),
+      page: () => const DetailScreen(),
     ),
       GetPage(
       name: AppRoutes.planDetailsScreen,
-      page: () => PlanDetailsScreen(),
+      page: () => const PlanDetailsScreen(),
     ),
     
 

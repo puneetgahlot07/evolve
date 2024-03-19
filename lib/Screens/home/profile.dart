@@ -79,7 +79,7 @@ class _ProfileState extends State<Profile> {
                               width: 150.h,
                               decoration: BoxDecoration(
                                  shape: BoxShape.circle,
-                                image: DecorationImage(image: profile.profileData.data!.image != null || profile.profileData.data!.image != "" ? NetworkImage(profile.profileData.data!.image!) : AssetImage(AppAssets.profileUserIcon) as ImageProvider ) 
+                                image: DecorationImage(image: profile.profileData.data!.image != null || profile.profileData.data!.image != "" ? NetworkImage(profile.profileData.data!.image!) : AssetImage(AppAssets.profileUserIcon) as ImageProvider, fit: BoxFit.fill)
                               ),    ),
                    ),
                    Positioned(
@@ -174,19 +174,19 @@ class _ProfileState extends State<Profile> {
                             color: AppColors.greyColor3,
                           ),
                           child: Row(
-                            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               addWidth(20.h),
-                              addRegularTxt('Information', fontSize: 14.sp, color: AppColors.blackColor2),
-                              
-                            ],
-                          ),
+                              addRegularTxt('Information', fontSize: 14.sp, color: AppColors.blackColor2)
+                            ]
+                          )
                       ),                                                                                                              
                       addHeight(10),
                       // subScreen("About Me", () { }),
-                      subScreen("Terms & Conditions", () { }),
-                      subScreen("Privacy Policy", () { 
-                        
+                      subScreen("Terms & Conditions", () {
+                        Get.toNamed(AppRoutes.cmsPagesScreen, arguments: {'cmsPagesTitle': 'Terms & Conditions', 'slug': 'terms-conditions'});
+                      }),
+                      subScreen("Privacy Policy", () {
+                        Get.toNamed(AppRoutes.cmsPagesScreen, arguments: {'cmsPagesTitle': 'Privacy Policy', 'slug': 'privacy-policy'});
                       }),
                        subScreen("All Purchases ", () { 
                         Get.toNamed(AppRoutes.helpDeskScreen);

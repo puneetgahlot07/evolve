@@ -59,7 +59,7 @@ class _EditProfileState extends State<EditProfile> {
                          children: [
                       
                        Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             shape: BoxShape.circle,                       
                           ),
                          
@@ -122,7 +122,7 @@ class _EditProfileState extends State<EditProfile> {
                                 14),
                                 validator: (val){
                                   if(val!.trim().isEmpty){
-                                    return "Last Name Requried*";
+                                    return "Last Name Required*";
                                   }
                                   else if(val.length < 3){
                                       return "Enter Valid Name*";
@@ -203,9 +203,8 @@ class _EditProfileState extends State<EditProfile> {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
-        title:  Text('Add Picture'.tr, style: TextStyle(
-          fontWeight: FontWeight.w700,
-        ),),
+        title:  Text('Add Picture'.tr, style: const TextStyle(
+          fontWeight: FontWeight.w700)),
         cancelButton: CupertinoActionSheetAction(
           onPressed: () {
             Navigator.pop(context);

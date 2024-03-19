@@ -17,11 +17,14 @@ import 'package:image_picker/image_picker.dart';
 
 import '../common-widgets/custom_loader.dart';
 import '../main.dart';
+import '../models/cms_pges_model.dart';
+import '../models/subscription_plan_model.dart';
 
 class ProfileController extends GetxController {
   // final controller =  Get.find<languageController>();
  bool obscureText = true;
   bool confObscureText = true;
+ final htmlText = ''.obs;
 
   TextEditingController passwordCtrl = TextEditingController();
   TextEditingController confPasswordCtrl = TextEditingController();
@@ -34,6 +37,7 @@ class ProfileController extends GetxController {
 String profilePhotoPath = "";
 
   final changePassKey = GlobalKey<FormState>();
+ List<SubscriptionPlanData> subscriptionPlan = [];
 
   @override
   void onInit() {
@@ -88,6 +92,112 @@ confOnPassSuffixTap(){
    return true;
 }
 
+//Get Subscription Plan API
+  Future<void> getSubscriptionPlanApi() async {
+  checkInternetConnectivity().then((isConnected) async {
+    if (isConnected) {
+
+      showLoader(true);
+      try {
+        var result = await ApiHandler().GetApi(apiName: ApiUrls.subscriptionPlan);
+        if(result != null){
+          if(result['success'] == true){
+            subscriptionPlan = SubscriptionPlanModel.fromJson(result).data ?? [];
+            update();
+          }
+        }
+        showLoader(false);
+      } catch (e) {
+        log("catch");
+        log(e.toString());
+        showToastError(e.toString(), );
+        showLoader(false);
+      }
+    } else {
+      showToastError('No Internet'.tr);
+      showLoader(false);
+    }
+});
+}
+
+//Get CMS Pages
+  Future<void> getCMSPagesApi({required String slug}) async {
+  checkInternetConnectivity().then((isConnected) async {
+    if (isConnected) {
+      showLoader(true);
+      try {
+        var result = await ApiHandler().GetApi(apiName: '${ApiUrls.cmsPages}/$slug');
+        if(result != null){
+          if(result['success'] == true){
+            CMSPagesData? cmsPagesModel = CMSPagesModel.fromJson(result).data ??  CMSPagesData();
+            String oldDes = cmsPagesModel.description ?? '';
+            htmlText.value = '''<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        <body style="color:white">''';
+
+            if (cmsPagesModel.description != null) {
+              htmlText.value += oldDes;
+            } else {
+              htmlText.value += 'Coming Soon....';
+            }
+            htmlText.value += '''</body></html>''';
+            update();
+          }
+        }
+        showLoader(false);
+      } catch (e) {
+        log("catch");
+        log(e.toString());
+        showToastError(e.toString(), );
+        showLoader(false);
+      }
+    } else {
+      showToastError('No Internet'.tr);
+      showLoader(false);
+    }
+});
+}
+
+  var planSeletedIndex;
+  var subscriptionPlan1 = [
+    {
+      'title': 'Learning Basic',
+      'data': [
+        'Process Flow', 'Tips And Tricks', 'Ask 2 Help Desk Questions'
+      ],
+      'des': "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
+      'price' : '\$99/Mouth'
+    },
+    {
+      'title': 'Learning Premium',
+      'data': [
+        'Process Flow',
+        'Trainings',
+        'Tips And Tricks',
+        'Ask 5 Help Desk Questions'
+      ],
+      'des': "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
+      'price' : '\$199/Mouth'
+    },
+    {
+      'title': 'Learning Premium+',
+      // 'des':
+      'data': [
+        'Process Flow',
+        'Trainings',
+        'Tips And Tricks',
+        'Ask 10 Help Desk Questions'
+      ],
+      'des': "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
+      'price' : '\$299/Mouth'
+    }
+
+  ];
 
 
   ChangePasswordApi() async {
@@ -194,8 +304,12 @@ Future<XFile?> getImageToCamera() async {
       file['image'] = profilePhotoPath;     
       log(ApiUrls.register);
       log(map.toString());
-
-      var result = await ApiHandler().PostMultipartApi(apiName: ApiUrls.profileUpdate, data: map, files: file,);     
+      var result;
+      if(profilePhotoPath != '' && profilePhotoPath.isNotEmpty){
+        result = await ApiHandler().PostMultipartApi(apiName: ApiUrls.profileUpdate, data: map, files: file);
+      }else{
+        result = await ApiHandler().PostApi(apiName: ApiUrls.profileUpdate, data: map);
+      }
       if(result != null){
       EditProfileModel res = EditProfileModel.fromJson(result);
       showLoader(false);

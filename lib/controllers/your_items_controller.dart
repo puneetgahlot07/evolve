@@ -1,17 +1,31 @@
+import 'dart:developer';
+
 import 'package:evolve/resources/app_assets.dart';
 import 'package:evolve/resources/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import '../common-widgets/custom_loader.dart';
+import '../models/faavourites_item_list_model.dart';
+import '../resources/api_constant.dart';
+import '../resources/apis.dart';
+import '../resources/utils.dart';
 
 class YourItemsController extends GetxController with GetSingleTickerProviderStateMixin {
 final List<Tab> myTabs = <Tab>[
-  Tab(text: 'Favorites'),
-  Tab(text: 'Purchased'),
+  const Tab(text: 'Favorites'),
+  const Tab(text: 'Purchased'),
 ];
 
 late TabController controller;
 
 int selectedTabIndex = 0;
+int currentPage = 0;
+late int totalPages;
+
+RefreshController refreshFavoritesController = RefreshController(initialRefresh: false);
+List<FavoritesItemsData> favoritesItemsData = [];
 
 @override
 void onInit() {
@@ -23,6 +37,37 @@ void onInit() {
 void onClose() {
   controller.dispose();
   super.onClose();
+}
+
+Future<void> getFavouriteListApi() async {
+  checkInternetConnectivity().then((isConnected) async {
+    if (isConnected) {
+      showLoader(true);
+      try {
+        var map = <String, dynamic>{};
+        map['page'] = '1';
+        map['limit'] = '10';
+
+        var result = await ApiHandler().PostApi(apiName: ApiUrls.favouriteList, data: map);
+        if(result != null){
+          print('Rest --- > $result');
+          if(result['success'] == true){
+            favoritesItemsData = FavoritesItemsListModel.fromJson(result).data?.items ?? [];
+            update();
+          }
+        }
+        showLoader(false);
+      } catch (e) {
+        log("catch");
+        log(e.toString());
+        showToastError(e.toString(), );
+        showLoader(false);
+      }
+    } else {
+      showToastError('No Internet'.tr);
+      showLoader(false);
+    }
+  });
 }
 
 final List<FavList> itemsFav = [

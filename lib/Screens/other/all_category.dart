@@ -2,6 +2,7 @@
 
 import 'package:evolve/common-widgets/custom_appbar_one.dart';
 import 'package:evolve/common-widgets/custom_bottom_navigation2.dart';
+import 'package:evolve/controllers/cart_conntroller.dart';
 import 'package:evolve/controllers/discover_controller.dart';
 import 'package:evolve/resources/app_color.dart';
 import 'package:evolve/resources/text_utility.dart';
@@ -21,7 +22,7 @@ class AllCategory extends StatefulWidget {
 
 class _AllCategoryState extends State<AllCategory> {
 
-   final controller = Get.put(DiscoverController());
+   final controller = Get.put(CartController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +36,7 @@ class _AllCategoryState extends State<AllCategory> {
         // isAction: false,
       ),
       body: GetBuilder(
-        init: DiscoverController(),
+        init: CartController(),
         initState: (_) {},
         builder: (_) {
           return Padding(
@@ -48,21 +49,30 @@ class _AllCategoryState extends State<AllCategory> {
                         children: List.generate(controller.categoryItemData.length, (index) {  
                           return InkWell(
               onTap: (){
-                Get.toNamed(AppRoutes.recruitingScreen);
+                Get.toNamed(AppRoutes.subCategoryListScreen, arguments: {'categoryName': "${controller.categoryItemData[index].title}", 'categoryId': "${controller.categoryItemData[index].id}"});
+                // Get.toNamed(AppRoutes.recruitingScreen, arguments: {'categoryId': "${controller.categoryItemData[index].id}"});
               },
               child: Container(
                 // color: Colors.blue,
                 child:Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      radius: 35,
-                      backgroundColor: AppColors.secondaryColor,
-                      child: SvgPicture.asset(controller.categoryItemData[index]['image']!, height: 40,),
+                    ClipOval(
+                      child: Image.network(
+                        controller.categoryItemData[index].image ?? '',
+                        width: 70,
+                        height: 70,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                    Spacer(),
-                    addRegularTxt(controller.categoryItemData[index]['title']!, color: AppColors.blackColor, fontSize: 13.sp, maxLines: 2, overflow: TextOverflow.ellipsis),
-                    Spacer(),
+                    const Spacer(),
+                    addRegularTxt(
+                        controller.categoryItemData[index].title ?? 'N/A',
+                        color: AppColors.blackColor,
+                        fontSize: 13.sp,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis),
+                    const Spacer(),
                   ],
                 )
               ),
