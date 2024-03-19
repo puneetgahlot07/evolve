@@ -94,7 +94,16 @@ class _DiscoverState extends State<Discover> {
                         color: AppColors.blackColor1)
                       ],)),
                       Expanded(
-                        child: profile.profileData.data!.image != null ?Image.network(profile.profileData.data!.image!):  Image.asset(AppAssets.homeUserIcon))
+                        child:Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(image:  
+                            profile.profileData.data!.image != null ? NetworkImage(profile.profileData.data!.image!): AssetImage(AppAssets.homeUserIcon) as ImageProvider )
+                          ),
+                          width: 60.h,
+                          height: 60.h,
+                        )
+                        )
                     ],),
                     ),
                   addHeight(20.h),  
