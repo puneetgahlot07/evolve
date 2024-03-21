@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
 import 'package:evolve/Screens/other/methodology_details.dart';
 import 'package:evolve/common-widgets/custom_bottom_navigation2.dart';
 import 'package:evolve/common-widgets/custom_button.dart';
@@ -12,7 +15,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-import 'subscription_screen.dart';
+
 
 
 class PayrollFlowChart extends StatefulWidget {
@@ -101,94 +104,260 @@ class _PayrollFlowChartState extends State<PayrollFlowChart> {
                 physics: ScrollPhysics(),
                 itemCount: controller.payRollFlowList.length,
                 itemBuilder: (context,int index){
-              return Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      // color: Colors.green,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.greyColor)
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 60,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              addBoldTxt('${controller.payRollFlowList[index]['title']}',
-                                  maxLines: 1, overflow: TextOverflow.ellipsis,
-                                  fontSize: 16,color: AppColors.primaryColor,fontWeight: FontWeight.w500),
-                                  addRegularTxt('${controller.payRollFlowList[index]['subTitle']}',
-                                  maxLines: 1, overflow: TextOverflow.ellipsis,
-                                  fontSize: 12,color: AppColors.greyColor1)
-                            ],
-                          ).paddingOnly(left: 20.sp),
-                        ),
-                        Spacer(),
-                        if(controller.payRollFlowList[index]['isImage'])
-                        Container(
-                          height: 48.h,
-                          child: SvgPicture.asset(AppAssets.img2).marginOnly(right: 16)),
+                  return tileViewUi(controller.payRollFlowList[index]);
+              // return Stack(
+              //   children: [
+              //     Container(
+              //       decoration: BoxDecoration(
+              //         // color: Colors.green,
+              //           borderRadius: BorderRadius.circular(10),
+              //           border: Border.all(color: AppColors.greyColor)
+              //       ),
+              //       child: Row(
+              //         children: [
+              //           Expanded(
+              //             flex: 60,
+              //             child: Column(
+              //               crossAxisAlignment: CrossAxisAlignment.start,
+              //               children: [
+              //                 addBoldTxt('${controller.payRollFlowList[index]['title']}',
+              //                     maxLines: 1, overflow: TextOverflow.ellipsis,
+              //                     fontSize: 16,color: AppColors.primaryColor,fontWeight: FontWeight.w500),
+              //                     addRegularTxt('${controller.payRollFlowList[index]['subTitle']}',
+              //                     maxLines: 1, overflow: TextOverflow.ellipsis,
+              //                     fontSize: 12,color: AppColors.greyColor1)
+              //               ],
+              //             ).paddingOnly(left: 20.sp),
+              //           ),
+              //           Spacer(),
+              //           if(controller.payRollFlowList[index]['isImage'])
+              //           InkWell(
+              //             onTap: (){
+              //               controller.downloadFile();
+              //             },
+              //             child: Container(
+              //               height: 48.h,
+              //               child: SvgPicture.asset(AppAssets.img2).marginOnly(right: 16)),
+              //           ),
 
-                        if(controller.payRollFlowList[index]['isButton'])
-                         CustomIconButton(icon: AppAssets.trolleyIcon, onPressed: () {  
-                          Get.to(MethodologyDetailScreen()); 
-                          },).marginOnly(right: 8),
-                        // CustomButton(
-                        //     radius: 10,
-                        //     fontWeight: FontWeight.w400,
-                        //     fontSize: 12,
-                        //     text: 'Purchase Now', onPressed: (){
-                        //       Get.to(MethodologyDetailScreen());
-                        // }).marginOnly(right: 16),
-                      ],
-                    ).paddingSymmetric(vertical: 4),
-                  ).marginOnly(left: 8),
+              //           if(controller.payRollFlowList[index]['isButton'])
+              //            CustomIconButton(icon: AppAssets.trolleyIcon, onPressed: () {  
+              //             Get.to(MethodologyDetailScreen()); 
+              //             },).marginOnly(right: 8),
+              //           // CustomButton(
+              //           //     radius: 10,
+              //           //     fontWeight: FontWeight.w400,
+              //           //     fontSize: 12,
+              //           //     text: 'Purchase Now', onPressed: (){
+              //           //       Get.to(MethodologyDetailScreen());
+              //           // }).marginOnly(right: 16),
+              //         ],
+              //       ).paddingSymmetric(vertical: 4),
+              //     ).marginOnly(left: 8),
 
-                  Positioned(
-                    top: 0,
-                    bottom: 0,
-                    // left: 0,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        height: 24.h,
-                        width: 24.h,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: AppColors.greyColor),
-                            shape: BoxShape.circle
+              //     Positioned(
+              //       top: 0,
+              //       bottom: 0,
+              //       // left: 0,
+              //       child: Align(
+              //         alignment: Alignment.center,
+              //         child: Container(
+              //           height: 24.h,
+              //           width: 24.h,
+              //           decoration: BoxDecoration(
+              //               color: Colors.white,
+              //               border: Border.all(color: AppColors.greyColor),
+              //               shape: BoxShape.circle
 
-                        ),
-                        // child: SvgPicture.asset(AppAssets.starFillIcon),
-                      ),
-                    ),
-                  ),
-                  Positioned( // ho hide shape
-                    top: 0,
-                    bottom: 0,
-                    // left: 0,
-                    child: Container(
-                      height: 20.h,
-                      width: 8.h,
-                      color: Colors.white,                     
-                    ),
-                  ),
-                  Positioned( // star image
-                    top: 0,
-                    bottom: 0,
-                    // left: 0,
-                    child: SvgPicture.asset(controller.payRollFlowList[index]['isFav']==true?AppAssets.starFillIcon:AppAssets.starUnFillIcon),
-                  ),
-                ],
-              ).marginOnly(left: 8,right: 16,bottom: 10.sp);
+              //           ),
+              //           // child: SvgPicture.asset(AppAssets.starFillIcon),
+              //         ),
+              //       ),
+              //     ),
+              //     Positioned( // ho hide shape
+              //       top: 0,
+              //       bottom: 0,
+              //       // left: 0,
+              //       child: Container(
+              //         height: 20.h,
+              //         width: 8.h,
+              //         color: Colors.white,                     
+              //       ),
+              //     ),
+              //     Positioned( // star image
+              //       top: 0,
+              //       bottom: 0,
+              //       // left: 0,
+              //       child: SvgPicture.asset(controller.payRollFlowList[index]['isFav']==true?AppAssets.starFillIcon:AppAssets.starUnFillIcon),
+              //     ),
+              //   ],
+              // ).marginOnly(left: 8,right: 16,bottom: 10.sp);
             }),
             addHeight(20),
           ],
         ),
       ),
        bottomNavigationBar: NavBar2(),
+    );
+  }
+
+  tileViewUi(var data){
+    bool download = false;
+    int dlValue = 0;
+     int i = 0;
+    return  StatefulBuilder(
+    builder: (context, setState) {
+        return Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          // color: Colors.green,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: AppColors.greyColor)
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 60,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  addBoldTxt('${data['title']}',
+                                      maxLines: 1, overflow: TextOverflow.ellipsis,
+                                      fontSize: 16,color: AppColors.primaryColor,fontWeight: FontWeight.w500),
+                                      addRegularTxt('${data['subTitle']}',
+                                      maxLines: 1, overflow: TextOverflow.ellipsis,
+                                      fontSize: 12,color: AppColors.greyColor1)
+                                ],
+                              ).paddingOnly(left: 20.sp),
+                            ),
+                            Spacer(),
+                            // download  && dlValue == 0 ? 
+                            // CircularProgressIndicator.adaptive() : 
+                            // dlValue > 0 && dlValue < 100
+                            download ? SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.black.withOpacity(0.1),
+                                  value: double.parse(dlValue.toString()) / 100,
+                                ),
+                              ),
+                            ) :
+                            data['isImage'] ?
+                            InkWell(
+                              onTap: () async {
+                               bool res =  await controller.downloadFile("https://v5.checkprojectstatus.com/evolve/public/documents/pdf/50261710932360.pdf");
+                               if(res){                                    
+                                    setState(() { 
+                                      download = true;                                     
+                                    });                                   
+                                    // while( i < 4) {
+                                    //         await Future.delayed(const Duration(seconds: 2), (){                                                                                       
+                                    //          setState(() {  
+                                    //            dlValue = dlValue + 25;                                              
+                                    //           });
+                                    //           i++;
+                                    //         });    
+                                    //          log("[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]");                                                         
+                                    //         log(dlValue.toString());                                  
+                                    //         log("[[[[[[[[[[[[[[[[[[[________]]]]]]]]]]]]]]]]]]]");            
+                                    //   } 
+                                    //   if(dlValue == 100){
+                                    //        download = false;            
+                                    //   }
+                                    
+                                 try {  
+                                  String url = "https://v5.checkprojectstatus.com/evolve/public/documents/pdf/50261710932360.pdf";
+                                  String  pdfName =  controller.dirloc + url.split("/").last;
+                                   Dio dio = Dio();
+          
+            await dio.download(
+              url, pdfName,
+                onReceiveProgress: (receivedBytes, totalBytes) {           
+              print('here 1');
+             setState(() { 
+                                      dlValue = int.parse(((receivedBytes / totalBytes) * 100).toStringAsFixed(0)) ;
+              });     
+              if(receivedBytes == totalBytes ){
+                 setState(() { 
+                  download = false;
+                 });
+              }
+              
+
+              // log(((receivedBytes / totalBytes) * 100).toStringAsFixed(0) + "%");
+              print('here 2');
+                //  return (receivedBytes / totalBytes) * 100).toStringAsFixed(0);
+
+            });
+          } catch (e) {
+
+            print('catch catch catch');
+            print(e);
+          }
+                               }
+                              },
+                              child: Container(
+                                height: 48.h,
+                                child: SvgPicture.asset(AppAssets.img2).marginOnly(right: 16)),
+                            ):
+
+                            // if(data['isButton'])
+                             CustomIconButton(icon: AppAssets.trolleyIcon, onPressed: () {  
+                              Get.to(MethodologyDetailScreen()); 
+                              },).marginOnly(right: 8),
+                            // CustomButton(
+                            //     radius: 10,
+                            //     fontWeight: FontWeight.w400,
+                            //     fontSize: 12,
+                            //     text: 'Purchase Now', onPressed: (){
+                            //       Get.to(MethodologyDetailScreen());
+                            // }).marginOnly(right: 16),
+                          ],
+                        ).paddingSymmetric(vertical: 4),
+                      ).marginOnly(left: 8),
+
+                      Positioned(
+                        top: 0,
+                        bottom: 0,
+                        // left: 0,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            height: 24.h,
+                            width: 24.h,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color: AppColors.greyColor),
+                                shape: BoxShape.circle
+
+                            ),
+                            // child: SvgPicture.asset(AppAssets.starFillIcon),
+                          ),
+                        ),
+                      ),
+                      Positioned( // ho hide shape
+                        top: 0,
+                        bottom: 0,
+                        // left: 0,
+                        child: Container(
+                          height: 20.h,
+                          width: 8.h,
+                          color: Colors.white,                     
+                        ),
+                      ),
+                      Positioned( // star image
+                        top: 0,
+                        bottom: 0,
+                        // left: 0,
+                        child: SvgPicture.asset(data['isFav']==true?AppAssets.starFillIcon:AppAssets.starUnFillIcon),
+                      ),
+                    ],
+                  ).marginOnly(left: 8,right: 16,bottom: 10.sp);
+      }
     );
   }
 }

@@ -70,6 +70,10 @@ class DiscoverController extends GetxController {
         ),);
         update();
   }
+
+
+  // Test Download Function 
+    
   
 
   List<Map<String, String>> popularItemData = [
@@ -95,7 +99,7 @@ class DiscoverController extends GetxController {
     },
   ];
 
-    List<Map<String, String>> categoryItemData = [
+  List<Map<String, String>> categoryItemData = [
     {
       'title': 'Learning',      
       'image': 'assets/images/cat1.svg',

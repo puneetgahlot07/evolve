@@ -24,10 +24,8 @@ class CustomBottomNav extends StatelessWidget {
     return GetBuilder<BottomBarController>(builder: (controller) {
       // if()
       return Scaffold(
-        backgroundColor: AppColors.whiteColor,
-        // key: controller.key,
+        backgroundColor: AppColors.whiteColor,        
         body: controller.widgetOptions.elementAt(controller.selectedIndex),
-
         bottomNavigationBar: Container(
           height: Get.height / 10,
           // color: Colors.amber,

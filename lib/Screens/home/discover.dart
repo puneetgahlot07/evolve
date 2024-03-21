@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:evolve/Screens/payroll_flow_chart.dart';
 import 'package:evolve/common-widgets/custom_card.dart';
 import 'package:evolve/common-widgets/custom_textfield.dart';
 import 'package:evolve/controllers/discover_controller.dart';
@@ -176,7 +177,9 @@ GridView.count(
     crossAxisCount: 2,
     children: List.generate(controller.popularItemData.length, (index) => CustomCard(title: controller.popularItemData[index]['title']!, 
     des: controller.popularItemData[index]['des']!,  img: controller.popularItemData[index]['image']!, 
-    onTap: () {  },))), 
+    onTap: () { 
+        Get.to(PayrollFlowChart());
+    },))), 
 
     addHeight(10.sp),
     Image.asset(AppAssets.discoverBanner)

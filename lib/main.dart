@@ -18,7 +18,9 @@ Future<void> main() async{
   await GetStorage.init();
   await Firebase.initializeApp();
   WidgetsFlutterBinding.ensureInitialized();
+  
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -48,8 +50,7 @@ class MyApp extends StatelessWidget {
           // translationsKeys: AppTranslation.translationsKeys,
           theme: ThemeData(
             primarySwatch: primaryColorShades,
-            appBarTheme: AppBarTheme(color: AppColors.whiteColor),
-            
+            appBarTheme: AppBarTheme(color: AppColors.whiteColor),            
             fontFamily: 'nourd',
           ),
           debugShowCheckedModeBanner: false,  

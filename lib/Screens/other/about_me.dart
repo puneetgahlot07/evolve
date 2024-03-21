@@ -1,13 +1,13 @@
 import 'package:evolve/common-widgets/custom_appbar_one.dart';
 import 'package:evolve/common-widgets/custom_bottom_navigation2.dart';
-import 'package:evolve/common-widgets/custom_button.dart';
+// import 'package:evolve/common-widgets/custom_button.dart';
 import 'package:evolve/resources/app_assets.dart';
 import 'package:evolve/resources/app_color.dart';
 import 'package:evolve/resources/text_utility.dart';
-import 'package:evolve/routers/app_routers.dart';
+// import 'package:evolve/routers/app_routers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class AboutMe extends StatefulWidget {

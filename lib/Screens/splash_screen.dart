@@ -23,6 +23,7 @@ class SplashScreen extends StatelessWidget {
       backgroundColor: AppColors.whiteColor,
       body: Container(
         width: double.infinity,
+        height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
             Image.asset(AppAssets.splashBg,fit: BoxFit.cover,height: MediaQuery.of(context).size.height*0.40,width: double.infinity,),
