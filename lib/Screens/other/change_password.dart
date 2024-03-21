@@ -28,7 +28,7 @@ class _ChangePasswordState extends State<ChangePassword> {
         centerTitle: true,
         isAction: false,
         leadingOnTap: () {
-          // Get.back();
+          Get.back();
         },
 
         // isAction: false,

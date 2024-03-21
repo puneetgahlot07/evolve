@@ -8,6 +8,7 @@ import 'package:evolve/controllers/your_items_controller.dart';
 import 'package:get/get.dart';
 
 import '../controllers/cart_conntroller.dart';
+import '../controllers/category_controller.dart';
 import '../controllers/choose_category_controller.dart';
 import '../controllers/login_controller.dart';
 import '../controllers/payroll_flow_chart_controller.dart';
@@ -26,6 +27,7 @@ Future<void> init() async{
   Get.put(ProfileController());
   Get.lazyPut<DiscoverController>(() => DiscoverController(), fenix: true);
   Get.lazyPut<CartController>(() => CartController(), fenix: true);
+  Get.put(CategoryController());
   // Get.lazyPut<ProfileController>(() => ProfileController(), fenix: true);
 
   Get.lazyPut<ChooseCategoryController>(() => ChooseCategoryController(), fenix: true);

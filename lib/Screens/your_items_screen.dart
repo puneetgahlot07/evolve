@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:evolve/Screens/widget/favorites_items_widget.dart';
+import 'package:evolve/Screens/widget/purchase_item_widget.dart';
 import 'package:evolve/common-widgets/custom_appbar_one.dart';
 import 'package:evolve/controllers/your_items_controller.dart';
 import 'package:evolve/resources/app_assets.dart';
@@ -9,9 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../common-widgets/base_image_network.dart';
 import '../models/faavourites_item_list_model.dart';
+import '../models/purchased_list_model.dart';
 
 class YourItems extends StatefulWidget {
   const YourItems({super.key});
@@ -33,68 +36,88 @@ class _YourItemsState extends State<YourItems> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarOne(
-        leadingOnTap: () {
-          Get.back();
-        },
-        centerTitle: true,
-        title: 'Your Items',
-        // isAction: false,
-      ),
-      body: GetBuilder<YourItemsController>(builder: (yItemCtrl) {
-        return Column(
-          children: [
-            addHeight(16),
-            Container(
-              decoration: BoxDecoration(
-                  color: const Color(0xffF3F3F3),
-                  borderRadius: BorderRadius.circular(15)),
-              child: TabBar(
-                onTap: (int index) {
-                  yItemCtrl.selectedTabIndex = index;
-                  yItemCtrl.update();
-                  log('selectedTabIndex: ${yItemCtrl.selectedTabIndex}');
-                },
-                controller: yItemCtrl.controller,
-                tabs: yItemCtrl.myTabs,
-                labelStyle: const TextStyle(),
-                // remove to show magic
-                unselectedLabelColor: AppColors.blackColor,
-                indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: AppColors.primaryColor),
-                indicatorPadding: const EdgeInsets.all(8),
-              ),
-            ).marginSymmetric(horizontal: 20),
-            addHeight(20),
-            if (yItemCtrl.selectedTabIndex == 0)
-              Expanded(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const ScrollPhysics(),
-                    itemCount: yItemCtrl.favoritesItemsData.length,
-                    itemBuilder: (context, int index) {
-                      return build_favouriteView(
-                          yItemCtrl.favoritesItemsData[index]);
-                    }),
-              ),
-            if (yItemCtrl.selectedTabIndex == 1)
-              Expanded(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const ScrollPhysics(),
-                    itemCount: yItemCtrl.itemsFav2.length,
-                    itemBuilder: (context, int index) {
-                      return build_purchasedView(yItemCtrl.itemsFav2[index]);
-                    }),
-              ),
-          ],
-        );
-      }),
-    );
+        appBar: CustomAppBarOne(
+          leadingOnTap: () {
+            Get.back();
+          },
+          centerTitle: true,
+          title: 'Your Items',
+          // isAction: false,
+        ),
+        body: GetBuilder<YourItemsController>(builder: (yItemCtrl) {
+          return Column(
+            children: [
+              addHeight(16),
+              Container(
+                decoration: BoxDecoration(
+                    color: const Color(0xffF3F3F3),
+                    borderRadius: BorderRadius.circular(15)),
+                child: TabBar(
+                  onTap: (int index) {
+                    if (yItemCtrl.selectedTabIndex != 1 && index == 1) {
+                      controller.getPurchasedListApi();
+                    }
+                    if (yItemCtrl.selectedTabIndex != 0 && index == 0) {
+                      controller.getFavouriteListApi();
+                    }
+                    yItemCtrl.selectedTabIndex = index;
+                    yItemCtrl.update();
+                    log('selectedTabIndex: ${yItemCtrl.selectedTabIndex}');
+                  },
+                  controller: yItemCtrl.controller,
+                  tabs: yItemCtrl.myTabs,
+                  labelStyle: const TextStyle(),
+                  // remove to show magic
+                  unselectedLabelColor: AppColors.blackColor,
+                  indicator: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: AppColors.primaryColor),
+                  indicatorPadding: const EdgeInsets.all(8),
+                ),
+              ).marginSymmetric(horizontal: 20.h),
+              addHeight(20),
+              if (yItemCtrl.selectedTabIndex == 0)
+                const Expanded(child: FavoritesItemWidget()),
+              // yItemCtrl.favoritesItemsData.isNotEmpty ? Expanded(
+              //   child: ListView.builder(
+              //       shrinkWrap: true,
+              //       physics: const ScrollPhysics(),
+              //       itemCount: yItemCtrl.favoritesItemsData.length,
+              //       itemBuilder: (context, int index) {
+              //         return buildFavouriteView(
+              //             yItemCtrl.favoritesItemsData[index]);
+              //       }),
+              // ) : Center(
+              //   child: Padding(
+              //     padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.2),
+              //     child: noRecordAvailable(msg: 'No Favorites Found')
+              //   ),
+              // ),
+              if (yItemCtrl.selectedTabIndex == 1)
+                const Expanded(child: PurchaseItemWidget()),
+              /* yItemCtrl.favoritesItemsData.isNotEmpty
+                    ? Expanded(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const ScrollPhysics(),
+                      itemCount: yItemCtrl.purchasedItemsData.length,
+                      itemBuilder: (context, int index) {
+                        return buildPurchasedView(
+                            yItemCtrl.purchasedItemsData[index]);
+                      }),
+                )
+                    : Center(
+                  child: Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.2),
+                      child: noRecordAvailable(msg: 'No Purchase Found')),
+                ),*/
+            ],
+          );
+        }));
   }
 
-  Widget build_favouriteView(FavoritesItemsData itemsFav) {
+  Widget buildFavouriteView(FavoritesItemsData itemsFav) {
     return Container(
       decoration: BoxDecoration(
           // color: Colors.green,
@@ -110,7 +133,8 @@ class _YourItemsState extends State<YourItems> {
                 height: 35,
                 fit: BoxFit.cover,
                 errorBuilder: (BuildContext context, Object exception,
-                        StackTrace? stackTrace) => const Icon(Icons.error, size: 35),
+                        StackTrace? stackTrace) =>
+                    const Icon(Icons.error, size: 35),
               ),
             ),
             addWidth(4),
@@ -136,7 +160,12 @@ class _YourItemsState extends State<YourItems> {
               ),
             ),
             const Spacer(),
-            SvgPicture.asset(AppAssets.starFillIcon)
+            InkWell(
+                onTap: () {
+                  controller.getFavouriteAddRemoveApi(
+                      documentId: '${itemsFav.document?.id}');
+                },
+                child: SvgPicture.asset(AppAssets.starFillIcon))
           ],
         ).paddingSymmetric(vertical: 10, horizontal: 10),
       ),
@@ -147,7 +176,7 @@ class _YourItemsState extends State<YourItems> {
     );
   }
 
-  Widget build_purchasedView(FavList itemsFav) {
+  Widget buildPurchasedView(PurchasedItemsData itemsFav) {
     return Container(
       decoration: BoxDecoration(
           // color: Colors.green,
@@ -156,13 +185,29 @@ class _YourItemsState extends State<YourItems> {
       child: IntrinsicHeight(
         child: Row(
           children: [
-            Container(
+            BaseImageNetwork(
+              fit: BoxFit.fill,
+              borderRadius: 18,
+              link: itemsFav.document?.image ?? '',
+              concatBaseUrl: true,
               height: 36.h,
               width: 36.h,
-              decoration:
-                  BoxDecoration(shape: BoxShape.circle, color: itemsFav.color),
-              child: SvgPicture.asset(itemsFav.image.toString()).marginAll(8),
+              topMargin: 0,
+              rightMargin: 0,
+              leftMargin: 0,
+              bottomMargin: 0,
+              errorWidget: Icon(
+                Icons.error,
+                size: 36.h,
+              ),
             ),
+            // Container(
+            //   height: 36.h,
+            //   width: 36.h,
+            //   decoration:
+            //       BoxDecoration(shape: BoxShape.circle, color: itemsFav.color),
+            //   child: SvgPicture.asset(itemsFav.image.toString()).marginAll(8),
+            // ),
             addWidth(4),
             const VerticalDivider(),
             addWidth(4),
@@ -171,13 +216,13 @@ class _YourItemsState extends State<YourItems> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  addBoldTxt(itemsFav.title.toString(),
+                  addBoldTxt(itemsFav.document?.name ?? '',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       fontSize: 16,
                       color: AppColors.primaryColor,
                       fontWeight: FontWeight.w500),
-                  addRegularTxt(itemsFav.subTitle.toString(),
+                  addRegularTxt(itemsFav.document?.description ?? '',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       fontSize: 12,

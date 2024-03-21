@@ -16,7 +16,23 @@ SizedBox addWidth(double width) {
   );
 }
 
-
+Widget noRecordAvailable(
+    {String? msg,
+    double fontSize = 18.0,
+    Color color = Colors.black,
+    bool isCenter = true}) {
+  return isCenter
+      ? Center(
+          child: addBoldTxt(msg ?? 'No Data Found', fontSize: 20),
+        )
+      : Text(
+          msg.toString(), // ?? translate(Get.context!).no_data_found,
+          style: TextStyle(
+            fontSize: fontSize.sp, // Change the font size to 20
+            color: color, // Change the text color to grey
+          ),
+        );
+}
 // only text
 // Text addTxt(String text,{int? maxLines, TextAlign? textAlign, double? fontSize}){
 //   return Text(text,
@@ -62,88 +78,144 @@ SizedBox addWidth(double width) {
 //           overflow: overflow,
 //           fontSize: fontSize?.sp??24.sp,fontWeight: fontWeight??FontWeight.w700, color: color??AppColors.blackColor));
 // }
-Text addTxt(String text,{int? maxLines, TextAlign? textAlign, double? fontSize}){
-  return Text(text,
-    maxLines: maxLines, textAlign: textAlign,
-    style: TextStyle(fontSize: fontSize?.sp??12.sp),);
+Text addTxt(String text,
+    {int? maxLines, TextAlign? textAlign, double? fontSize}) {
+  return Text(
+    text,
+    maxLines: maxLines,
+    textAlign: textAlign,
+    style: TextStyle(fontSize: fontSize?.sp ?? 12.sp),
+  );
 }
 
 // for w300
-Text addLightTxt(String text,{int? maxLines, TextAlign? textAlign, double? fontSize, Color? color}){
-  return Text(text,
-    maxLines: maxLines, textAlign: textAlign,
-    
-    style: TextStyle(fontSize: fontSize?.sp??12.sp,fontWeight: FontWeight.w300,
-     color: color ?? AppColors.blackColor,),);
+Text addLightTxt(String text,
+    {int? maxLines, TextAlign? textAlign, double? fontSize, Color? color}) {
+  return Text(
+    text,
+    maxLines: maxLines,
+    textAlign: textAlign,
+    style: TextStyle(
+      fontSize: fontSize?.sp ?? 12.sp,
+      fontWeight: FontWeight.w300,
+      color: color ?? AppColors.blackColor,
+    ),
+  );
 }
 
 // for w400
-Text addRegularTxt(String text,{TextOverflow? overflow,int? maxLines, TextAlign? textAlign,double? fontSize,Color? color,double? height, double? letterSpacing} ){
+Text addRegularTxt(String text,
+    {TextOverflow? overflow,
+    int? maxLines,
+    TextAlign? textAlign,
+    double? fontSize,
+    Color? color,
+    double? height,
+    double? letterSpacing}) {
   return Text(text,
-      maxLines: maxLines, textAlign: textAlign,overflow: overflow,
+      maxLines: maxLines,
+      textAlign: textAlign,
+      overflow: overflow,
       style: TextStyle(
           overflow: overflow,
           height: height,
           letterSpacing: letterSpacing ?? 0.0,
-          
-          fontSize: fontSize?.sp??16.sp,fontWeight: FontWeight.w400,color: color));
+          fontSize: fontSize?.sp ?? 16.sp,
+          fontWeight: FontWeight.w400,
+          color: color));
 }
 
 // for bold, w500 || w600 || w700 || w900,
-Text addBoldTxt(
-    String text,{int? maxLines, TextAlign? textAlign, double? fontSize,
-      FontWeight? fontWeight,Color? color,TextOverflow? overflow,TextDecoration? decoration,double? height}){
+Text addBoldTxt(String text,
+    {int? maxLines,
+    TextAlign? textAlign,
+    double? fontSize,
+    FontWeight? fontWeight,
+    Color? color,
+    TextOverflow? overflow,
+    TextDecoration? decoration,
+    double? height}) {
   return Text(text,
-      maxLines: maxLines, textAlign: textAlign,overflow: overflow,
-      style: TextStyle(height: height,overflow: overflow,fontSize: fontSize?.sp??12.sp,fontWeight: fontWeight??FontWeight.bold,color: color,decoration: decoration));
+      maxLines: maxLines,
+      textAlign: textAlign,
+      overflow: overflow,
+      style: TextStyle(
+          height: height,
+          overflow: overflow,
+          fontSize: fontSize?.sp ?? 12.sp,
+          fontWeight: fontWeight ?? FontWeight.bold,
+          color: color,
+          decoration: decoration));
 }
 
 // add text
-Text addHeadingTxt(
-    String text,{int? maxLines, TextAlign? textAlign, double? fontSize, FontWeight? fontWeight,double? height,Color? color,TextOverflow? overflow}){
+Text addHeadingTxt(String text,
+    {int? maxLines,
+    TextAlign? textAlign,
+    double? fontSize,
+    FontWeight? fontWeight,
+    double? height,
+    Color? color,
+    TextOverflow? overflow}) {
   return Text(text,
-      maxLines: maxLines, textAlign: textAlign,
-
-      style: TextStyle(height: height,
+      maxLines: maxLines,
+      textAlign: textAlign,
+      style: TextStyle(
+          height: height,
           overflow: overflow,
-          fontSize: fontSize?.sp??24.sp,fontWeight: fontWeight??FontWeight.w700, color: color??AppColors.blackColor));
+          fontSize: fontSize?.sp ?? 24.sp,
+          fontWeight: fontWeight ?? FontWeight.w700,
+          color: color ?? AppColors.blackColor));
 }
 
-
-Text addHeadingTxtMedium(
-    String text,{int? maxLines, TextAlign? textAlign, double? fontSize, FontWeight? fontWeight,double? height,Color? color,TextOverflow? overflow, String? fontFamily }){
+Text addHeadingTxtMedium(String text,
+    {int? maxLines,
+    TextAlign? textAlign,
+    double? fontSize,
+    FontWeight? fontWeight,
+    double? height,
+    Color? color,
+    TextOverflow? overflow,
+    String? fontFamily}) {
   return Text(text,
-      maxLines: maxLines, textAlign: textAlign,
-      style: TextStyle(height: height,
+      maxLines: maxLines,
+      textAlign: textAlign,
+      style: TextStyle(
+          height: height,
           overflow: overflow,
           fontFamily: fontFamily ?? 'nourd_medium',
-          fontSize: fontSize?.sp??24.sp,fontWeight: fontWeight??FontWeight.w700, color: color??AppColors.blackColor));
+          fontSize: fontSize?.sp ?? 24.sp,
+          fontWeight: fontWeight ?? FontWeight.w700,
+          color: color ?? AppColors.blackColor));
 }
 
-
 // multi text like a row
-RichText richText( String? text1,text2,
-    { double? fontSize1,fontSize2, FontWeight? fontWeight1,fontWeight2, Color? textColor1,textColor2, GestureRecognizer? onTapText2})
-{
+RichText richText(String? text1, text2,
+    {double? fontSize1,
+    fontSize2,
+    FontWeight? fontWeight1,
+    fontWeight2,
+    Color? textColor1,
+    textColor2,
+    GestureRecognizer? onTapText2}) {
   return RichText(
-    text:  TextSpan(
+    text: TextSpan(
       text: text1,
       style: TextStyle(
-          fontSize: fontSize1??14.sp,
-          // color: textColor1??AppColors.blackColor,
-          // fontFamily: 'Ubuntu'
+        fontSize: fontSize1 ?? 14.sp,
+        // color: textColor1??AppColors.blackColor,
+        // fontFamily: 'Ubuntu'
       ),
       children: [
         TextSpan(
           text: text2,
           recognizer: onTapText2,
           style: TextStyle(
-            fontSize: fontSize2??14.sp,
-            fontWeight: fontWeight2??FontWeight.bold,
+            fontSize: fontSize2 ?? 14.sp,
+            fontWeight: fontWeight2 ?? FontWeight.bold,
             // color: textColor2??AppColors.buttonColor,
           ),
         ),
-
       ],
     ),
   );

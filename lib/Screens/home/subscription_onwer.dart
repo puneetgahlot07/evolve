@@ -11,7 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/get_utils.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import '../../common-widgets/base_image_network.dart';
+import '../../controllers/category_controller.dart';
+import '../../controllers/your_items_controller.dart';
 import '../../resources/app_color.dart';
 
 class SubScriptionOwnership extends StatefulWidget {
@@ -22,220 +25,266 @@ class SubScriptionOwnership extends StatefulWidget {
 }
 
 class _SubScriptionOwnershipState extends State<SubScriptionOwnership> {
-  // final double appBarHeight = 66.0;
-  final controller = Get.put(CartController());
+  final yourItemController = Get.put(YourItemsController());
+  final controller = Get.put(CategoryController());
 
-  // final controller = Get.put(DiscoverController());
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.getCategoryApi();
+    yourItemController.getPurchasedListApi();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: GetBuilder(
-      init: CartController(),
-      initState: (_) {},
-      builder: (_) {
-        return CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              backgroundColor: AppColors.primaryColor,
-              leading: GestureDetector(
-                onTap: () {},
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: AppColors.whiteColor,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.greyColor)),
-                  child: SvgPicture.asset(
-                    AppAssets.popIcon,
-                  ).marginAll(8),
-                ),
-              ).paddingOnly(left: 16),
-              title: addHeadingTxt("Subscription And Ownership",
-                  fontSize: 18.sp,
-                  color: AppColors.whiteColor,
-                  fontWeight: FontWeight.w500),
-              pinned: true,
-              expandedHeight: 120.0,
-              flexibleSpace: const FlexibleSpaceBar(
-                background: MyFlexiableAppBar(),
-              ),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(20.0),
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.h),
-              child: Row(
-                children: [
-                  addRegularTxt('Category',
-                      color: AppColors.blackColor, fontSize: 17.sp)
-                ],
-              ),
-            )),
-            SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4, // Number of columns
-                mainAxisSpacing: 12.0, // Spacing between rows
-                crossAxisSpacing: 5.0, // Spacing between columns
-                childAspectRatio:
-                    0.8, // Ratio of width to height for each grid item
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  if (index == 7 ||
-                      index == controller.categoryItemData.length) {
-                    return InkWell(
-                      onTap: () {
-                        Get.to(const AllCategory());
-                        // Get.toNamed(AppRoutes.chooseCategoryScreen);
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                      CircleAvatar(
-                        radius: 35,
-                        backgroundColor: AppColors.secondaryColor,
-                        child: SvgPicture.asset(
-                          "assets/images/see_more.svg",
-                          height: 40,
+        body: Scrollbar(
+            child: SmartRefresher(
+                onRefresh: () async {
+                  await controller.getCategoryApi();
+                  await yourItemController.getFavouriteListApi();
+                  yourItemController.refreshHomeController.refreshCompleted();
+                },
+                controller: yourItemController.refreshHomeController,
+                child: CustomScrollView(
+                  slivers: <Widget>[
+                    SliverAppBar(
+                      backgroundColor: AppColors.primaryColor,
+                      leading: GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: AppColors.greyColor)),
+                          child: SvgPicture.asset(
+                            AppAssets.popIcon,
+                          ).marginAll(8),
+                        ),
+                      ).paddingOnly(left: 16),
+                      title: addHeadingTxt("Subscription And Ownership",
+                          fontSize: 18.sp,
+                          color: AppColors.whiteColor,
+                          fontWeight: FontWeight.w500),
+                      pinned: true,
+                      expandedHeight: 120.0,
+                      flexibleSpace: const FlexibleSpaceBar(
+                        background: MyFlexiableAppBar(),
+                      ),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          bottom: Radius.circular(20.0),
                         ),
                       ),
-                      const Spacer(),
-                      addRegularTxt('See More',
-                          color: AppColors.blackColor,
-                          fontSize: 13.sp,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis),
-                      const Spacer(),
+                    ),
+                    SliverToBoxAdapter(
+                        child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 20.h, horizontal: 16.h),
+                      child: Row(
+                        children: [
+                          addRegularTxt('Category',
+                              color: AppColors.blackColor, fontSize: 17.sp)
                         ],
                       ),
-                    );
-                  }
-                  return InkWell(
-                    onTap: () {
-                      Get.toNamed(AppRoutes.subCategoryListScreen, arguments: {'categoryName': "${controller.categoryItemData[index].title}", 'categoryId': "${controller.categoryItemData[index].id}"});
-                      // Get.toNamed(AppRoutes.recruitingScreen, arguments: {'categoryId': "${controller.categoryItemData[index].id}"});
-                    },
-                    child: Container(
-                        // color: Colors.blue,
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ClipOval(
-                          child: Image.network(
-                            controller.categoryItemData[index].image ?? '',
-                            width: 70,
-                            height: 70,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const Spacer(),
-                        addRegularTxt(
-                            controller.categoryItemData[index].title ?? 'N/A',
-                            color: AppColors.blackColor,
-                            fontSize: 13.sp,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis),
-                        const Spacer(),
-                      ],
                     )),
-                  );
-                },
-                childCount: controller.categoryItemData.isNotEmpty ? controller.categoryItemData.length > 8
-                    ? 8
-                    : controller.categoryItemData.length +
-                        1 : 0, // Number of items in the grid
-              ),
-            ),
-            SliverToBoxAdapter(
-                child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  addRegularTxt('My Subscriptions',
-                      color: AppColors.blackColor, fontSize: 17.sp),
-                  InkWell(
-                      onTap: () {
-                        Get.toNamed(AppRoutes.mySubscription);
-                      },
-                      child: addRegularTxt('See All',
-                          color: AppColors.blackColor, fontSize: 14.sp))
-                ],
-              ),
-            )),
-            SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Number of columns
-                mainAxisSpacing: 14.0, // Spacing between rows
-                crossAxisSpacing: 6.0, // Spacing between columns
-                childAspectRatio:
-                    1.0, // Ratio of width to height for each grid item
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 10.0.sp, vertical: 8.sp),
-                    child: CustomCard(
-                        title: controller.mySubscription[index]['title']!,
-                        des: controller.mySubscription[index]['des']!,
-                        img: controller.mySubscription[index]['image']!,
-                        onTap: () {
-                          Get.toNamed(AppRoutes.chooseCategoryScreen);
-                        }),
-                  );
-                },
-                childCount: controller
-                    .mySubscription.length, // Number of items in the grid
-              ),
-            ),
-            SliverToBoxAdapter(
-                child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  addRegularTxt('Available Subscriptions',
-                      color: AppColors.blackColor, fontSize: 17.sp),
-                  InkWell(
-                      onTap: () {
-                        Get.toNamed(AppRoutes.availableSubscription);
-                      },
-                      child: addRegularTxt('See All',
-                          color: AppColors.blackColor, fontSize: 14.sp))
-                ],
-              ),
-            )),
-            SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Number of columns
-                mainAxisSpacing: 14.0, // Spacing between rows
-                crossAxisSpacing: 6.0, // Spacing between columns
-                childAspectRatio:
-                    1.0, // Ratio of width to height for each grid item
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 10.0.sp, vertical: 8.sp),
-                    child: CustomCard(
-                        title: controller.mySubscription[index]['title']!,
-                        des: controller.mySubscription[index]['des']!,
-                        img: controller.mySubscription[index]['image']!,
-                        onTap: () {}),
-                  );
-                },
-                childCount: controller
-                    .mySubscription.length, // Number of items in the grid
-              ),
-            )
-          ],
-        );
-      },
-    ));
+                    GetBuilder<CategoryController>(
+                        builder: (controller) => controller
+                                .categoryItemData.isNotEmpty
+                            ? SliverGrid(
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 4, // Number of columns
+                                  mainAxisSpacing: 12.0, // Spacing between rows
+                                  crossAxisSpacing:
+                                      5.0, // Spacing between columns
+                                  childAspectRatio:
+                                      0.8, // Ratio of width to height for each grid item
+                                ),
+                                delegate: SliverChildBuilderDelegate(
+                                  (BuildContext context, int index) {
+                                    if (index == 7 ||
+                                        index ==
+                                            controller
+                                                .categoryItemData.length) {
+                                      return InkWell(
+                                        onTap: () {
+                                          Get.to(const AllCategory());
+                                          // Get.toNamed(AppRoutes.chooseCategoryScreen);
+                                        },
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 35,
+                                              backgroundColor:
+                                                  AppColors.secondaryColor,
+                                              child: SvgPicture.asset(
+                                                "assets/images/see_more.svg",
+                                                height: 40,
+                                              ),
+                                            ),
+                                            const Spacer(),
+                                            addRegularTxt('See More',
+                                                color: AppColors.blackColor,
+                                                fontSize: 13.sp,
+                                                maxLines: 2,
+                                                overflow:
+                                                    TextOverflow.ellipsis),
+                                            const Spacer(),
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                    return InkWell(
+                                      onTap: () {
+                                        Get.toNamed(
+                                            AppRoutes.subCategoryListScreen,
+                                            arguments: {
+                                              'categoryName':
+                                                  "${controller.categoryItemData[index].title}",
+                                              'categoryId':
+                                                  "${controller.categoryItemData[index].id}"
+                                            });
+                                        // Get.toNamed(AppRoutes.recruitingScreen, arguments: {'categoryId': "${controller.categoryItemData[index].id}"});
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          BaseImageNetwork(
+                                            fit: BoxFit.cover,
+                                            borderRadius: 100,
+                                            link: controller
+                                                    .categoryItemData[index]
+                                                    .image ??
+                                                '',
+                                            concatBaseUrl: true,
+                                            height: 70,
+                                            width: 70,
+                                            topMargin: 0,
+                                            rightMargin: 0,
+                                            leftMargin: 0,
+                                            bottomMargin: 0,
+                                            errorWidget: const Icon(Icons.error,
+                                                size: 70),
+                                          ),
+                                          // ClipOval(
+                                          //   child: Image.network(
+                                          //     controller.categoryItemData[index].image ?? '',
+                                          //     width: 70,
+                                          //     height: 70,
+                                          //     fit: BoxFit.cover,
+                                          //   ),
+                                          // ),
+                                          const Spacer(),
+                                          addRegularTxt(
+                                              controller.categoryItemData[index]
+                                                      .title ??
+                                                  'N/A',
+                                              color: AppColors.blackColor,
+                                              fontSize: 13.sp,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis),
+                                          const Spacer(),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  childCount: controller
+                                          .categoryItemData.isNotEmpty
+                                      ? controller.categoryItemData.length > 8
+                                          ? 8
+                                          : controller.categoryItemData.length +
+                                              1
+                                      : 0, // Number of items in the grid
+                                ),
+                              )
+                            : SliverToBoxAdapter(
+                                child: Padding(
+                                    padding: const EdgeInsets.only(),
+                                    child: noRecordAvailable(
+                                        msg: 'No Category Found')),
+                              )),
+                    SliverToBoxAdapter(
+                        child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.h, horizontal: 16.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          addRegularTxt('My PDf',
+                              color: AppColors.blackColor, fontSize: 17.sp),
+                          InkWell(
+                              onTap: () {
+                                Get.toNamed(AppRoutes.mySubscription);
+                              },
+                              child: addRegularTxt('See All',
+                                  color: AppColors.blackColor, fontSize: 14.sp))
+                        ],
+                      ),
+                    )),
+                    GetBuilder<YourItemsController>(
+                        builder: (controller) => controller
+                                .purchasedItemsData.isNotEmpty
+                            ? SliverGrid(
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2, // Number of columns
+                                  mainAxisSpacing: 14.0, // Spacing between rows
+                                  crossAxisSpacing:
+                                      6.0, // Spacing between columns
+                                  childAspectRatio:
+                                      1.0, // Ratio of width to height for each grid item
+                                ),
+                                delegate: SliverChildBuilderDelegate(
+                                  (BuildContext context, int index) {
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10.0.sp, vertical: 8.sp),
+                                      child: CustomCard(
+                                          title: controller
+                                                  .purchasedItemsData[index]
+                                                  .document
+                                                  ?.name ??
+                                              '',
+                                          des: controller
+                                                  .purchasedItemsData[index]
+                                                  .document
+                                                  ?.description ??
+                                              '',
+                                          img: controller
+                                                  .purchasedItemsData[index]
+                                                  .document
+                                                  ?.image ??
+                                              '',
+                                          onTap: () {
+                                            Get.toNamed(
+                                                AppRoutes.chooseCategoryScreen);
+                                          }),
+                                    );
+                                  },
+                                  childCount: controller
+                                              .purchasedItemsData.length >
+                                          4
+                                      ? 4
+                                      : controller.purchasedItemsData
+                                          .length, // Number of items in the grid
+                                ),
+                              )
+                            : SliverToBoxAdapter(
+                                child: Padding(
+                                    padding: EdgeInsets.only(
+                                        top:
+                                            MediaQuery.of(context).size.height *
+                                                0.2),
+                                    child:
+                                        noRecordAvailable(msg: 'No PDF Found')),
+                              ))
+                  ],
+                ))));
   }
 }
 
@@ -251,6 +300,11 @@ class MyFlexiableAppBar extends StatelessWidget {
     return Container(
       padding: EdgeInsets.only(top: statusBarHeight),
       height: statusBarHeight + appBarHeight,
+      decoration: const BoxDecoration(
+          color: AppColors.primaryColor,
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20))),
       child: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -294,11 +348,6 @@ class MyFlexiableAppBar extends StatelessWidget {
           ),
         ],
       )),
-      decoration: const BoxDecoration(
-          color: AppColors.primaryColor,
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20))),
     );
   }
 }

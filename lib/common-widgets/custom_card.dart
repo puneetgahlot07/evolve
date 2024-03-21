@@ -30,19 +30,27 @@ class CustomCard extends StatelessWidget {
           // color: AppColors.blackColor1,
           borderRadius: BorderRadiusDirectional.circular(20.sp),
           
-          image: DecorationImage(          
-            image: AssetImage(img),           
-            fit: BoxFit.fitHeight),
+          image: DecorationImage(
+              fit: BoxFit.fill,
+              image: img != ''
+                  ? NetworkImage(
+                  img)
+                  : const AssetImage(
+                  AppAssets.homeUserIcon)
+              as ImageProvider)
+          // DecorationImage(
+          //   image: AssetImage('assets/images/mysub1.png'),
+          //   fit: BoxFit.fitHeight),
         ),
          
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadiusDirectional.circular(20.sp),
-             gradient: LinearGradient(
+             gradient: const LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.transparent,
+                  Colors.black87,
                   Colors.transparent,
                   Colors.transparent,
                   Colors.black38,
@@ -61,18 +69,17 @@ class CustomCard extends StatelessWidget {
             children: [
               Row(
               children: [
-                Spacer(),
-              SvgPicture.asset(AppAssets.playButtonIcon, height: 40.sp,), 
-              Spacer(),
-              Column(
+              Padding(padding: EdgeInsets.only(left: 3.sp, right: 5.sp), child: SvgPicture.asset(AppAssets.playButtonIcon, height: 40.sp)),
+              // const Spacer(),
+              Expanded(child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  addBoldTxt(title, color: AppColors.whiteColor, fontSize: 15.sp),
-                  addRegularTxt(des, color: AppColors.whiteColor, fontSize: 12.sp)
+                  addBoldTxt(title, color: AppColors.whiteColor, fontSize: 15.sp, overflow: TextOverflow.ellipsis),
+                  addRegularTxt(des, color: AppColors.whiteColor, fontSize: 12.sp, overflow: TextOverflow.ellipsis)
                 ],
-              ),
-               Spacer(),
+              )),
+               // const Spacer(),
             ]),
             addHeight(10.sp)
             ],

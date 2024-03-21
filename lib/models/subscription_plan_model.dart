@@ -34,6 +34,8 @@ class SubscriptionPlanData {
   String? stripePriceId;
   int? price;
   String? duration;
+  List<dynamic>? features;
+  String? image;
   String? description;
   String? createdAt;
   String? updatedAt;
@@ -46,6 +48,8 @@ class SubscriptionPlanData {
         this.stripePriceId,
         this.price,
         this.duration,
+        this.features,
+        this.image,
         this.description,
         this.createdAt,
         this.updatedAt,
@@ -58,6 +62,8 @@ class SubscriptionPlanData {
     stripePriceId = json['stripe_price_id'];
     price = json['price'];
     duration = json['duration'];
+    features = json['features'];
+    image = json['image'];
     description = json['description'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -72,6 +78,8 @@ class SubscriptionPlanData {
     data['stripe_price_id'] = stripePriceId;
     data['price'] = price;
     data['duration'] = duration;
+    data['features'] = features;
+    data['image'] = image;
     data['description'] = description;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;

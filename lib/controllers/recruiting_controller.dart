@@ -27,9 +27,8 @@ class RecruitingController extends GetxController with GetSingleTickerProviderSt
           map['limit'] = '100';
           map['search'] = '';
 
-          var result = await ApiHandler().PostApi(apiName: '${ApiUrls.cartSubCategory}/$categoryId', data: map);
+          var result = await ApiHandler().PostApi(apiName: '${ApiUrls.setDefaultCard}/$categoryId', data: map);
           if(result != null){
-            print('Rest --- > ${result}');
             if(result['success'] == true){
               // categoryItemData = CartSubCategoryModel.fromJson(result).data?.items ?? [];
               update();

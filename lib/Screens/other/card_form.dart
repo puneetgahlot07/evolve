@@ -1,14 +1,14 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:evolve/common-widgets/custom_appbar_one.dart';
 import 'package:evolve/common-widgets/custom_bottom_navigation2.dart';
 import 'package:evolve/common-widgets/custom_button.dart';
-import 'package:evolve/common-widgets/custom_textfield.dart';
+import 'package:evolve/controllers/profile_controller.dart';
 import 'package:evolve/resources/text_utility.dart';
-import 'package:evolve/routers/app_routers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../models/subscription_plan_model.dart';
 import '../../resources/app_color.dart';
 
 class CardFormScreen extends StatefulWidget {
@@ -19,10 +19,21 @@ class CardFormScreen extends StatefulWidget {
 }
 
 class _CardFormScreenState extends State<CardFormScreen> {
-  String? selectedIndex ;
+  String? selectedIndex;
+  SubscriptionPlanData? subscriptionSelectPlanData;
+  final controller = Get.find<ProfileController>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    subscriptionSelectPlanData = Get.arguments;
+    controller.getCardListApi();
+  }
+
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
+    return Scaffold(
       backgroundColor: AppColors.whiteColor,
       appBar: CustomAppBarOne(
         title: "Credit & Debit Card",
@@ -31,153 +42,232 @@ class _CardFormScreenState extends State<CardFormScreen> {
           Get.back();
         },
         isAction: false,
-        
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding:  EdgeInsets.all(12.0.h),
-          child: Column(
-            children: [
-                // addHeight(400),
-                 Stack(
-                    children: [
-                      CustomTextField(
-                
-                        // labelText: 'First Name',
-                        // controller: controller.fNameCtrl,
-                        // suffixIcon: SvgPicture.asset(AppAssets.userIcon).marginAll(
-                            // 14),
-                      ),
-                      Positioned(
-                          left: 12.sp,
-                          top: 6.sp,
-                          child: addBoldTxt('Card number',height: 1.0,fontWeight: FontWeight.w500,fontSize: 11,color: AppColors.txtFieldLabelColor)),
-                    ],
-                  ),
-                 
-                  addHeight(20.h),
-                  Row(
+      body: GetBuilder<ProfileController>(
+          builder: (controller) => Scrollbar(
+              child: RefreshIndicator(
+                  onRefresh: () async {
+                    await controller.getCardListApi(isShowLoader: true);
+                  },
+                  child: Column(
                     children: [
                       Expanded(
-                        flex: 4,
-                        child:  Stack(
-                    children: [
-                      CustomTextField(                     
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.all(12.0.h),
+                              // physics: const AlwaysScrollableScrollPhysics(),
+                              itemCount: controller.cardDataItemList.length,
+                              itemBuilder: (context, index) {
+                                return Stack(children: [
+                                  CreditCardWidget(
+                                    enableFloatingCard: false,
+                                    cardNumber:
+                                        "0000 0000 0000 ${controller.cardDataItemList[index].last4}",
+                                    expiryDate:
+                                        '${controller.cardDataItemList[index].expMonth}/${controller.cardDataItemList[index].expYear}',
+                                    cardHolderName:
+                                        '${controller.cardDataItemList[index].name}',
+                                    cvvCode: '',
+                                    bankName:
+                                        '${controller.cardDataItemList[index].brand}',
+                                    frontCardBorder:
+                                        Border.all(color: Colors.grey),
+                                    backCardBorder:
+                                        Border.all(color: Colors.grey),
+                                    showBackView: false,
+                                    obscureCardNumber: true,
+                                    obscureCardCvv: false,
+                                    isHolderNameVisible: true,
+                                    isSwipeGestureEnabled: true,
+                                    onCreditCardWidgetChange:
+                                        (CreditCardBrand creditCardBrand) {},
+                                  ),
+                                  Positioned(
+                                      right: 5,
+                                      bottom: 5,
+                                      child: Radio(
+                                          value: 1,
+                                          groupValue: controller
+                                              .cardDataItemList[index]
+                                              .isDefault,
+                                          onChanged: (_) {
+                                            controller.setDefaultCardApi(
+                                                cardId: controller
+                                                    .cardDataItemList[index].id
+                                                    .toString());
+                                          },
+                                          fillColor: MaterialStateProperty.all(
+                                              Colors.white))),
+                                  Positioned(
+                                      right: 5,
+                                      top: 5,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          controller.removeCardApi(
+                                              cardId: controller
+                                                  .cardDataItemList[index].id
+                                                  .toString());
+                                        },
+                                        child: const Align(
+                                          alignment: Alignment.topRight,
+                                          child: CircleAvatar(
+                                            radius: 14.0,
+                                            backgroundColor:
+                                                AppColors.primaryColor,
+                                            child: Icon(Icons.close,
+                                                color: Colors.red),
+                                          ),
+                                        ),
+                                      ))
+                                ]);
+
+                                // return buildCreditCard(
+                                //     color: const Color(0xFF090943),
+                                //     cardExpiration: "${controller.cardDataItemList[index].expMonth}/${controller.cardDataItemList[index].expYear}",
+                                //     cardHolder: "${controller.cardDataItemList[index].name}",
+                                //     cardNumber: "XXXX XXXX XXXX ${controller.cardDataItemList[index].last4}");
+                              })),
+                      _buildAddCardButton(
+                        icon: const Icon(Icons.add),
+                        color: const Color(0xFF081603),
                       ),
-                      Positioned(
-                          left: 12.sp,
-                          top: 6.sp,
-                          child: addBoldTxt('Expiration',height: 1.0,fontWeight: FontWeight.w500,fontSize: 11,color: AppColors.txtFieldLabelColor)),
+                      addHeight(120.h),
                     ],
-                  ),),
-                  Spacer(),
-                   Expanded(
-                        flex: 4,
-                        child:  Stack(
-                    children: [
-                      CustomTextField(                     
-                      ),
-                      Positioned(
-                          left: 12.sp,
-                          top: 6.sp,
-                          child: addBoldTxt('CVC',height: 1.0,fontWeight: FontWeight.w500,fontSize: 11,color: AppColors.txtFieldLabelColor)),
-                    ],
-                  ),)
-                    ],
-                  ),
-                  addHeight(20.h),
-                  Container(
-                    height: 60.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.txtFieldFillColor ,    
-                       borderRadius: BorderRadius.circular(10.sp),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: DropdownButtonFormField2(
-                                                isExpanded: true,
-                                                isDense: true,
-                                                decoration: InputDecoration(                 
-                                                  contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                                                  border: OutlineInputBorder(
-                                                    borderRadius: BorderRadius.circular(10.sp),
-                                                    borderSide: BorderSide.none
-                                                  ),
-                                                  filled: true,
-                                                  label: Padding(
-                                                    padding: const EdgeInsets.all(8.0),
-                                                    child: addBoldTxt('Country',fontWeight: FontWeight.w500,fontSize: 12.sp,color: AppColors.txtFieldLabelColor),
-                                                  ),
-                                                  fillColor: AppColors.txtFieldFillColor                                  
-                                                ),
-                                                onMenuStateChange: (val){                
-                                                },
-                                                value: selectedIndex ?? null,
-                                                items: ['India', 'USA', 'Finland']                                            // Filter out null values
-                                                .map((item) => DropdownMenuItem(
-                                                value: item,
-                                                child: addRegularTxt(item.toString(), fontSize: 14.sp,
-                                                 color: AppColors.primaryColor),
-                                                ))
-                                                .toList(),                           
-                                                // validator: (value) {
-                                                //   // if (value == null) {
-                                                //   //   return  "  "+'Shipment Weight Required'.tr;
-                                                //   // }
-                                                //   // return null;
-                                                // },              
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    selectedIndex = value;
-                                                  });
-                                                  // controller.FatchCostValueApi();
-                                                  // controller.shipmentWeight = value;
-                                      
-                                                  // controller.update();
-                                                },
-                                                onSaved: (value) {
-                                                 
-                                                },
-                                                buttonStyleData: const ButtonStyleData(
-                                                  padding: EdgeInsets.only(right: 12),
-                                                ),
-                                               
-                                                dropdownStyleData: const DropdownStyleData(                
-                                                  decoration: BoxDecoration(
-                                                    color: AppColors.txtFieldFillColor
-                                                    // borderRadius: BorderRadius.circular(15),
-                                                  ),
-                                                ),
-                                                menuItemStyleData: const MenuItemStyleData(
-                                                  padding: EdgeInsets.symmetric(horizontal: 16),
-                                                ),
-                                              ),
-                    ),
-                  ),
-                  // Spacer()
-                  
-                  addHeight(120.h),
-            ],
-          ),
-        ),
-      ),
-      bottomSheet: Container(
+                  )))),
+      bottomSheet: SizedBox(
         height: 120.h,
         width: Get.height,
         child: Column(children: [
-      
-                    addBoldTxt('Amount to pay: \$15', fontSize: 16, color: AppColors.primaryColor),
-                    addHeight(20.h),
-                    CustomButton(
-                      height: 60.h,
-                      width: Get.width /1.5,
-                      text: 'Proceed to Payment', onPressed: (){
-                        Get.toNamed(AppRoutes.paymentSuccessScreen);
-                      }),
+          addHeight(5.h),
+          addBoldTxt(
+              'Amount to pay: \$${subscriptionSelectPlanData?.price ?? ''}',
+              fontSize: 16,
+              color: AppColors.primaryColor),
+          addHeight(20.h),
+          CustomButton(
+              height: 60.h,
+              width: Get.width / 1.5,
+              text: 'Proceed to Payment',
+              onPressed: () {
+                controller.createSubscriptionPlanApi(
+                    subStripePriceId:
+                        subscriptionSelectPlanData?.stripePriceId ?? '');
+              }),
         ]),
       ),
-      bottomNavigationBar: NavBar2(),
-      );
-      
+      bottomNavigationBar: const NavBar2(),
+    );
+  }
+
+  //New Add
+  Card buildCreditCard(
+      {required Color color,
+      required String cardNumber,
+      required String cardHolder,
+      required String cardExpiration}) {
+    return Card(
+      elevation: 4.0,
+      color: color,
+      /*1*/
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Container(
+        height: 200,
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 22.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            /* Here we are going to place the _buildLogosBlock */
+            _buildLogosBlock(),
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              /* Here we are going to place the Card number */
+              child: Text(
+                cardNumber,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 21,
+                    fontFamily: 'CourrierPrime'),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                /* Here we are going to place the _buildDetailsBlock */
+                _buildDetailsBlock(
+                  label: 'CARDHOLDER',
+                  value: cardHolder,
+                ),
+                _buildDetailsBlock(
+                  label: 'VALID THRU',
+                  value: cardExpiration,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Row _buildLogosBlock() {
+    return Row(
+      /*1*/
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Image.asset(
+          "assets/images/contact_less.png",
+          height: 20,
+          width: 18,
+        ),
+        Image.asset(
+          "assets/images/mastercard.png",
+          height: 50,
+          width: 50,
+        ),
+      ],
+    );
+  }
+
+  Column _buildDetailsBlock({required String label, required String value}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          label,
+          style: const TextStyle(
+              color: Colors.grey, fontSize: 9, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          value,
+          style: const TextStyle(
+              color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+        )
+      ],
+    );
+  }
+
+  // Build the FloatingActionButton
+  Container _buildAddCardButton({
+    required Icon icon,
+    required Color color,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(top: 24.0),
+      alignment: Alignment.center,
+      child: FloatingActionButton(
+        elevation: 2.0,
+        onPressed: () async {
+          await controller.addCardApi();
+          controller.getCardListApi();
+          print("Add a credit card");
+        },
+        backgroundColor: color,
+        mini: false,
+        child: icon,
+      ),
+    );
   }
 }

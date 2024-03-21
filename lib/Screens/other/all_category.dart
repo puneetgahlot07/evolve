@@ -1,17 +1,13 @@
-
-
 import 'package:evolve/common-widgets/custom_appbar_one.dart';
 import 'package:evolve/common-widgets/custom_bottom_navigation2.dart';
-import 'package:evolve/controllers/cart_conntroller.dart';
-import 'package:evolve/controllers/discover_controller.dart';
 import 'package:evolve/resources/app_color.dart';
 import 'package:evolve/resources/text_utility.dart';
 import 'package:evolve/routers/app_routers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
+import '../../controllers/category_controller.dart';
 
 class AllCategory extends StatefulWidget {
   const AllCategory({super.key});
@@ -21,40 +17,43 @@ class AllCategory extends StatefulWidget {
 }
 
 class _AllCategoryState extends State<AllCategory> {
+  final controller = Get.put(CategoryController());
 
-   final controller = Get.put(CartController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar: CustomAppBarOne(
+      appBar: CustomAppBarOne(
         title: 'Categories',
         centerTitle: true,
         isAction: false,
         leadingOnTap: () {
           Get.back();
         },
-        // isAction: false,
       ),
-      body: GetBuilder(
-        init: CartController(),
-        initState: (_) {},
-        builder: (_) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GridView.count(  
-                        crossAxisCount: 4, // Number of columns
-                  mainAxisSpacing: 12.0, // Spacing between rows
-                  crossAxisSpacing: 5.0, // Spacing between columns
-                  childAspectRatio: 0.8, 
-                        children: List.generate(controller.categoryItemData.length, (index) {  
-                          return InkWell(
-              onTap: (){
-                Get.toNamed(AppRoutes.subCategoryListScreen, arguments: {'categoryName': "${controller.categoryItemData[index].title}", 'categoryId': "${controller.categoryItemData[index].id}"});
-                // Get.toNamed(AppRoutes.recruitingScreen, arguments: {'categoryId': "${controller.categoryItemData[index].id}"});
-              },
-              child: Container(
-                // color: Colors.blue,
-                child:Column(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GridView.count(
+            crossAxisCount: 4,
+            // Number of columns
+            mainAxisSpacing: 12.0,
+            // Spacing between rows
+            crossAxisSpacing: 5.0,
+            // Spacing between columns
+            childAspectRatio: 0.8,
+            children:
+                List.generate(controller.categoryItemData.length, (index) {
+              return InkWell(
+                onTap: () {
+                  Get.toNamed(AppRoutes.subCategoryListScreen, arguments: {
+                    'categoryName':
+                        "${controller.categoryItemData[index].title}",
+                    'categoryId': "${controller.categoryItemData[index].id}"
+                  });
+                  // Get.toNamed(AppRoutes.recruitingScreen, arguments: {'categoryId': "${controller.categoryItemData[index].id}"});
+                },
+                child: Container(
+                    // color: Colors.blue,
+                    child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ClipOval(
@@ -74,16 +73,11 @@ class _AllCategoryState extends State<AllCategory> {
                         overflow: TextOverflow.ellipsis),
                     const Spacer(),
                   ],
-                )
-              ),
-            );  
-                        }  
-                        )  
-                    ),
-          ); 
-        },
-      )   ,
-       bottomNavigationBar: NavBar2(),       
+                )),
+              );
+            })),
+      ),
+      bottomNavigationBar: NavBar2(),
     );
   }
 }
