@@ -86,7 +86,7 @@ Future<void> getFavouriteAddRemoveApi({required String documentId}) async {
         var map = <String, dynamic>{};
         map['document_id'] = documentId;
 
-        var result = await ApiHandler().PostApi(apiName: ApiUrls.favouriteAddRemove, data: map);
+        var result = await ApiHandler().PostApi(apiName: ApiUrls. favouriteAddRemove, data: map);
         if(result != null){
           if(result['success'] == false){
             for (int i = 0; i < favoritesItemsData.length; i++) {

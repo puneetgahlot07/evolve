@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../common-widgets/base_image_network.dart';
 import '../../common-widgets/custom_appbar_one.dart';
 import '../../common-widgets/custom_button.dart';
 import '../../controllers/cart_conntroller.dart';
@@ -24,57 +25,56 @@ class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBarOne(
-          leadingOnTap: () {
-            Get.back();
-          },
-          centerTitle: true,
-          title: 'Cart',
-          isAction: false,
-        ),
-        body: Scrollbar(
-            child: SmartRefresher(
-                onRefresh: () async {
-                  await controller.getCartListApi();
-                  controller.refreshCartController.refreshCompleted();
-                },
-                controller: controller.refreshCartController,
-                child: GetBuilder<CartController>(
-                    builder: (controller) => Column(
-                          children: [
-                            addHeight(16),
-                            controller.cartListItems.isNotEmpty
-                                ? Expanded(
-                                    child: ListView.builder(
-                                        shrinkWrap: true,
-                                        physics: const ScrollPhysics(),
-                                        itemCount:
-                                            controller.cartListItems.length,
-                                        itemBuilder: (context, int index) {
-                                          return buildCartView(
-                                              controller.cartListItems[index]);
-                                        }),
-                                  )
-                                : Center(
-                                    child: Padding(
-                                        padding: EdgeInsets.only(
-                                            top: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.2),
-                                        child: noRecordAvailable(
-                                            msg: 'No Data Found')),
-                                  ),
-                          ],
-                        )))),
+      appBar: CustomAppBarOne(
+        leadingOnTap: () {
+          Get.back();
+        },
+        centerTitle: true,
+        title: 'Cart',
+        isAction: false,
+      ),
+      body: Scrollbar(
+          child: SmartRefresher(
+              onRefresh: () async {
+                await controller.getCartListApi();
+                controller.refreshCartController.refreshCompleted();
+              },
+              controller: controller.refreshCartController,
+              child: GetBuilder<CartController>(
+                  builder: (controller) => Column(
+                        children: [
+                          addHeight(16),
+                          controller.cartListItems.isNotEmpty
+                              ? Expanded(
+                                  child: ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: const ScrollPhysics(),
+                                      itemCount:
+                                          controller.cartListItems.length,
+                                      itemBuilder: (context, int index) {
+                                        return buildCartView(
+                                            controller.cartListItems[index]);
+                                      }),
+                                )
+                              : Center(
+                                  child: Padding(
+                                      padding: EdgeInsets.only(
+                                          top: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.2),
+                                      child: noRecordAvailable(
+                                          msg: 'No Data Found')),
+                                ),
+                        ],
+                      )))),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: CustomButton(
+      floatingActionButton: GetBuilder<CartController>(
+    builder: (controller) => controller.cartListItems.isNotEmpty ? CustomButton(
           height: 60.h,
           width: MediaQuery.of(context).size.width * 0.9,
           text: 'Proceed to Payment',
-          onPressed: () {
-
-          }),
+          onPressed: () {}) : const SizedBox.shrink()),
     );
   }
 
@@ -86,18 +86,20 @@ class _CartState extends State<Cart> {
           border: Border.all(color: AppColors.greyColor)),
       child: IntrinsicHeight(
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            ClipOval(
-              child: Image.network(
-                '',
+            BaseImageNetwork(
+                fit: BoxFit.fill,
+                borderRadius: 18,
+                height: 40,
                 width: 35,
-                height: 35,
-                fit: BoxFit.cover,
-                errorBuilder: (BuildContext context, Object exception,
-                        StackTrace? stackTrace) =>
-                    const Icon(Icons.error, size: 35),
-              ),
-            ),
+                link: itemsCart.document?.image ?? '',
+                concatBaseUrl: true,
+                topMargin: 0,
+                rightMargin: 0,
+                leftMargin: 0,
+                bottomMargin: 0,
+                errorWidget: Icon(Icons.error, size: 49.w)),
             addWidth(4),
             const VerticalDivider(),
             addWidth(4),
@@ -106,13 +108,14 @@ class _CartState extends State<Cart> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  addBoldTxt('itemsCart.document?.name' ?? 'N/A',
+                  addBoldTxt(itemsCart.document?.name ?? 'N/A',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       fontSize: 16,
                       color: AppColors.primaryColor,
                       fontWeight: FontWeight.w500),
-                  addRegularTxt('itemsFav.document?.description' ?? 'N/A',
+                  addHeight(4),
+                  addRegularTxt('Price: \$${itemsCart.price ?? 'N/A'}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       fontSize: 12,
@@ -126,12 +129,10 @@ class _CartState extends State<Cart> {
                   controller.removeCartListApi(
                       productId: itemsCart.productId.toString());
                 },
-                child: addBoldTxt('Remove',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    fontSize: 14,
-                    color: Colors.red,
-                    fontWeight: FontWeight.w900))
+                child: const Padding(
+                  padding: EdgeInsets.all(7),
+                  child: Icon(Icons.delete_forever, color: Colors.red,)
+                ))
           ],
         ).paddingSymmetric(vertical: 10, horizontal: 10),
       ),

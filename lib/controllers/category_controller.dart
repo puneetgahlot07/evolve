@@ -24,7 +24,7 @@ class CategoryController extends GetxController{
     checkInternetConnectivity().then((isConnected) async {
 
       if (isConnected) {
-       
+
         try {
           showLoader(true);
           var map = <String, dynamic>{};

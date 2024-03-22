@@ -60,6 +60,7 @@ class CartListItems {
   int? productId;
   String? createdAt;
   String? updatedAt;
+  Document? document;
 
   CartListItems(
       {this.id,
@@ -68,7 +69,8 @@ class CartListItems {
         this.quantity,
         this.productId,
         this.createdAt,
-        this.updatedAt});
+        this.updatedAt,
+        this.document});
 
   CartListItems.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -78,6 +80,9 @@ class CartListItems {
     productId = json['product_id'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    document = json['document'] != null
+        ? Document.fromJson(json['document'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -89,6 +94,31 @@ class CartListItems {
     data['product_id'] = productId;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
+    if (document != null) {
+      data['document'] = document!.toJson();
+    }
+    return data;
+  }
+}
+
+class Document {
+  int? id;
+  String? name;
+  String? image;
+
+  Document({this.id, this.name, this.image});
+
+  Document.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    image = json['image'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['image'] = image;
     return data;
   }
 }

@@ -14,6 +14,7 @@ import 'package:get/get.dart';
 import 'package:get/get_utils/get_utils.dart';
 import '../../common-widgets/base_image_network.dart';
 import '../../common-widgets/custom_appbar_one.dart';
+import '../../common-widgets/custom_bottom_navigation2.dart';
 import '../../controllers/category_controller.dart';
 import '../../resources/app_color.dart';
 
@@ -45,7 +46,7 @@ class _SubCategoryListScreenState extends State<SubCategoryListScreen> {
           isAction: false,
           leadingOnTap: () {
             Get.back();
-          },  
+          },
 
           // isAction: false,
         ),
@@ -77,24 +78,12 @@ class _SubCategoryListScreenState extends State<SubCategoryListScreen> {
                             concatBaseUrl: true,
                             height: 70,
                             width: 70,
-                            topMargin: 0,
-                            rightMargin: 0,
-                            leftMargin: 0,
-                            bottomMargin: 0,
+                            topMargin: 2,
+                            rightMargin: 2,
+                            leftMargin: 2,
+                            bottomMargin: 2,
                             errorWidget: const Icon(Icons.error, size: 70),
                           ),
-                          // ClipOval(
-                          //   child: Image.network(
-                          //     controller.subCategoryItemData[index].image ?? '',
-                          //     width: 70,
-                          //     height: 70,
-                          //     fit: BoxFit.cover,
-                          //     errorBuilder: (BuildContext context,
-                          //             Object exception,
-                          //             StackTrace? stackTrace) =>
-                          //         const Icon(Icons.error, size: 70),
-                          //   ),
-                          // ),
                           const Spacer(),
                           addRegularTxt(
                               controller.subCategoryItemData[index].title ??
@@ -114,6 +103,8 @@ class _SubCategoryListScreenState extends State<SubCategoryListScreen> {
               )
             ],
           );
-        }));
+        }),
+      bottomNavigationBar: const NavBar2(),
+    );
   }
 }

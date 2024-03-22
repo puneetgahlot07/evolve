@@ -167,7 +167,7 @@ class BaseImageNetwork extends StatelessWidget {
               height: height,
               child: Center(
                 child: CircularProgressIndicator(
-                  color: AppColors.whiteColor,
+                  color: AppColors.primaryColor,
                   value: loadingProgress.expectedTotalBytes != null
                       ? loadingProgress.cumulativeBytesLoaded /
                           loadingProgress.expectedTotalBytes!
