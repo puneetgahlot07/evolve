@@ -52,7 +52,7 @@ class _PayrollFlowChartState extends State<PayrollFlowChart> {
                       child: Container(
                         height: 40.h,
                         width: 40.h,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: AppColors.whiteColor
                           // border: Border.all(color: AppColors.greyColor)
@@ -68,7 +68,7 @@ class _PayrollFlowChartState extends State<PayrollFlowChart> {
                       child: Container(
                         height: 40.h,
                         width: 40.h,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: AppColors.whiteColor
                           // border: Border.all(color: AppColors.greyColor)
@@ -204,12 +204,13 @@ class _PayrollFlowChartState extends State<PayrollFlowChart> {
   tileViewUi(var data){
     bool download = false;
     int dlValue = 0;
-     int i = 0;
+    //  int i = 0;
     return  StatefulBuilder(
     builder: (context, setState) {
         return Stack(
                     children: [
                       Container(
+                        height: 60.h,
                         decoration: BoxDecoration(
                           // color: Colors.green,
                             borderRadius: BorderRadius.circular(10),
@@ -221,6 +222,7 @@ class _PayrollFlowChartState extends State<PayrollFlowChart> {
                               flex: 60,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:MainAxisAlignment.center,
                                 children: [
                                   addBoldTxt('${data['title']}',
                                       maxLines: 1, overflow: TextOverflow.ellipsis,
@@ -294,7 +296,6 @@ class _PayrollFlowChartState extends State<PayrollFlowChart> {
 
             });
           } catch (e) {
-
             print('catch catch catch');
             print(e);
           }
@@ -306,34 +307,32 @@ class _PayrollFlowChartState extends State<PayrollFlowChart> {
                             ):
 
                             // if(data['isButton'])
-                             CustomIconButton(icon: AppAssets.trolleyIcon, onPressed: () {  
+                             CustomIconButton(
+                              height: 45.h,
+                              width: 60.h,
+                              icon: AppAssets.trolleyIcon, onPressed: () {  
                               Get.to(MethodologyDetailScreen()); 
-                              },).marginOnly(right: 8),
-                            // CustomButton(
-                            //     radius: 10,
-                            //     fontWeight: FontWeight.w400,
-                            //     fontSize: 12,
-                            //     text: 'Purchase Now', onPressed: (){
-                            //       Get.to(MethodologyDetailScreen());
-                            // }).marginOnly(right: 16),
+                              },).marginOnly(right: 8),                         
                           ],
                         ).paddingSymmetric(vertical: 4),
                       ).marginOnly(left: 8),
 
                       Positioned(
                         top: 0,
+                        // right: ,
+                        left: -10,
                         bottom: 0,
                         // left: 0,
                         child: Align(
                           alignment: Alignment.center,
                           child: Container(
-                            height: 24.h,
-                            width: 24.h,
+                            height: 40.h,
+                            width: 35.h,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 border: Border.all(color: AppColors.greyColor),
                                 shape: BoxShape.circle
-
+                        
                             ),
                             // child: SvgPicture.asset(AppAssets.starFillIcon),
                           ),

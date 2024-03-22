@@ -1,8 +1,13 @@
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:evolve/Screens/other/pdf_view.dart';
 import 'package:evolve/controllers/your_items_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../common-widgets/custom_loader.dart';
@@ -29,21 +34,22 @@ class CartController extends GetxController
     const Tab(text: 'Trainings'),
   ];
 
+    DocumentationListItems docmentDetails = DocumentationListItems();
   @override
   void onInit() {
     super.onInit();
     controller = TabController(vsync: this, length: myTabs.length);
     // getCategoryApi();
-    getCartListApi();
-    final yourItemController = Get.put(YourItemsController());
-    yourItemController.getPurchasedListApi();
+    // getCartListApi();
+// 
   }
 
   Future<void> getCartListApi() async {
     checkInternetConnectivity().then((isConnected) async {
       if (isConnected) {
-        showLoader(true);
+       
         try {
+           showLoader(true);
           var map = <String, dynamic>{};
           map['page'] = '1';
           map['limit'] = '100';
@@ -51,6 +57,7 @@ class CartController extends GetxController
 
           var result =
               await ApiHandler().PostApi(apiName: ApiUrls.cart, data: map);
+              log(result.toString());
           if (result != null) {
             if (result['success'] == true) {
               cartListItems.clear();
@@ -61,12 +68,15 @@ class CartController extends GetxController
           }
           showLoader(false);
         } catch (e) {
+         
           log("catch");
+
           log(e.toString());
+           showLoader(false);
           showToastError(
             e.toString(),
           );
-          showLoader(false);
+         
         }
       } else {
         showToastError('No Internet'.tr);
@@ -144,71 +154,6 @@ class CartController extends GetxController
     });
   }
 
-  /*Future<void> getCategoryApi() async {
-    checkInternetConnectivity().then((isConnected) async {
-
-      if (isConnected) {
-
-        showLoader(true);
-        try {
-          var map = <String, dynamic>{};
-          map['page'] = '1';
-          map['limit'] = '100';
-          map['search'] = '';
-
-          var result = await ApiHandler().PostApi(apiName: ApiUrls.category, data: map);
-          if(result != null){
-            if(result['success'] == true){
-              categoryItemData = CartCategoryListModel.fromJson(result).data?.items ?? [];
-              update();
-            }
-          }
-          showLoader(false);
-        } catch (e) {
-          log("catch");
-          log(e.toString());
-          showToastError(e.toString(), );
-          showLoader(false);
-        }
-      } else {
-        showToastError('No Internet'.tr);
-        showLoader(false);
-      }
-    });
-
-  }
-
-  Future<void> getSubCategoryApi({required String categoryId}) async {
-    checkInternetConnectivity().then((isConnected) async {
-      if (isConnected) {
-        showLoader(true);
-        try {
-          var map = <String, dynamic>{};
-          map['page'] = '1';
-          map['limit'] = '100';
-          map['search'] = '';
-
-          var result = await ApiHandler().PostApi(apiName: '${ApiUrls.setDefaultCard}/$categoryId', data: map);
-          if(result != null){
-            if(result['success'] == true){
-              subCategoryItemData.addAll(CartSubCategoryModel.fromJson(result).data?.items ?? []);
-              update();
-            }
-          }
-          showLoader(false);
-        } catch (e) {
-          log("catch");
-          log(e.toString());
-          showToastError(e.toString(), );
-          showLoader(false);
-        }
-      } else {
-        showToastError('No Internet'.tr);
-        showLoader(false);
-      }
-    });
-  }*/
-
   Future<void> getDocumentsApi({required String categoryName}) async {
     checkInternetConnectivity().then((isConnected) async {
       if (isConnected) {
@@ -218,7 +163,7 @@ class CartController extends GetxController
           map['page'] = '1';
           map['limit'] = '10';
           map['search'] = '';
-          map['category'] = '';
+          map['category'] = categoryName;
 
           var result = await ApiHandler()
               .PostApi(apiName: ApiUrls.documentation, data: map);
@@ -246,6 +191,65 @@ class CartController extends GetxController
     });
   }
 
+  // Download Code
+
+  String dirloc = "";
+  Future<bool> downloadFile(String url, ) async {      
+    // log("Hello Android");
+   
+    dirloc = "";
+    update();
+    final status;
+    // = await Permission.storage.request()
+     if (Platform.isAndroid) {
+        AndroidDeviceInfo android = await DeviceInfoPlugin().androidInfo;
+        if(android.version.sdkInt > 32){
+          
+        status =  await Permission.manageExternalStorage.request();
+         dirloc = "${(await getExternalStorageDirectory())!.path}/download/evolve/";
+        }
+        else{        
+        status = await Permission.storage.request();      
+          dirloc = "${(await getExternalStorageDirectory())!.path}/download/evolve/";
+        } 
+      }
+      else{
+        status =  await Permission.storage.request();  
+        dirloc = (await getApplicationDocumentsDirectory()).path;    
+      }
+    log(status.toString());
+    if(dirloc != "") {      
+      // String url = "https://v5.checkprojectstatus.com/evolve/public/documents/pdf/1710840089.pdf";
+      var pdfName ="$dirloc" + url.split("/").last;
+      if (await File(pdfName).exists()){     
+        Get.to(PdfViewPage(filePath: pdfName));
+        return false;
+      }
+     else{  
+      log("Download Code Block")           ;
+      log('$pdfName');
+      return true;
+      }
+  
+
+    }
+    else{
+      log("Denied");
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo android = await DeviceInfoPlugin().androidInfo;
+        if(android.version.sdkInt > 32){
+          await Permission.manageExternalStorage.request();
+        }
+        else{
+           await Permission.storage.request();      
+        }
+      }
+      else{
+         await Permission.storage.request();      
+      }
+      return false;           
+    }
+    }
   List<Map<String, dynamic>> recruitingList = [
     {
       'title': 'Introduction',

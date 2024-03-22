@@ -23,7 +23,7 @@ class _MySubscriptionState extends State<MySubscription> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBarOne(
-          title: "My PDF",
+          title: "My Subscriptions",
           centerTitle: true,
           leadingOnTap: () {
             Get.back();

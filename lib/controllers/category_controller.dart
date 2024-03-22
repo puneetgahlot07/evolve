@@ -17,16 +17,16 @@ class CategoryController extends GetxController{
   @override
   void onInit() {
     super.onInit();
-    getCategoryApi();
+    // getCategoryApi();
   }
 
   Future<void> getCategoryApi() async {
     checkInternetConnectivity().then((isConnected) async {
 
       if (isConnected) {
-
-        showLoader(true);
+       
         try {
+          showLoader(true);
           var map = <String, dynamic>{};
           map['page'] = '1';
           map['limit'] = '100';

@@ -1,15 +1,15 @@
-import 'package:evolve/Screens/other/all_category.dart';
-import 'package:evolve/common-widgets/custom_card.dart';
-import 'package:evolve/controllers/cart_conntroller.dart';
+// import 'package:evolve/Screens/other/all_category.dart';
+// import 'package:evolve/common-widgets/custom_card.dart';
+// import 'package:evolve/controllers/cart_conntroller.dart';
 
 // import 'package:evolve/common-widgets/custom_textfield.dart';
-import 'package:evolve/controllers/discover_controller.dart';
-import 'package:evolve/resources/app_assets.dart';
+// import 'package:evolve/controllers/discover_controller.dart';
+// import 'package:evolve/resources/app_assets.dart';
 import 'package:evolve/resources/text_utility.dart';
 import 'package:evolve/routers/app_routers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/get_utils.dart';
 import '../../common-widgets/base_image_network.dart';
@@ -25,7 +25,8 @@ class SubCategoryListScreen extends StatefulWidget {
 }
 
 class _SubCategoryListScreenState extends State<SubCategoryListScreen> {
-  final controller = Get.put(CategoryController());
+  // final controller = Get.put(CategoryController());
+   final controller = Get.find<CategoryController>();
 
   @override
   void initState() {
@@ -44,7 +45,7 @@ class _SubCategoryListScreenState extends State<SubCategoryListScreen> {
           isAction: false,
           leadingOnTap: () {
             Get.back();
-          },
+          },  
 
           // isAction: false,
         ),

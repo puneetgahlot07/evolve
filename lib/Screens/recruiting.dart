@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../common-widgets/base_image_network.dart';
 import '../controllers/cart_conntroller.dart';
@@ -23,7 +24,8 @@ class RecruitingScreen extends StatefulWidget {
 
 class _RecruitingScreenState extends State<RecruitingScreen> {
   CartSubCategoryItemsData? cartSubCategoryItemsData;
-  final controller = Get.put(CartController());
+  // final controller =(CartController());
+   final controller = Get.find<CartController>();
 
   // final controller = Get.find<RecruitingController>();
   @override
@@ -31,13 +33,23 @@ class _RecruitingScreenState extends State<RecruitingScreen> {
     // TODO: implement initState
     super.initState();
     cartSubCategoryItemsData = Get.arguments;
-    controller.getDocumentsApi(categoryName: '');
+    controller.getDocumentsApi(categoryName: cartSubCategoryItemsData!.id.toString());
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GetBuilder<CartController>(
+      body: Scrollbar(
+          child: SmartRefresher(
+              onRefresh: () async {
+                if(controller.selectedTabIndex == 0) {
+                  await controller.getDocumentsApi(categoryName: '');
+                  controller.refreshDocumentationController.refreshCompleted();
+                }
+              },
+              controller: controller.selectedTabIndex == 0 ? controller.refreshDocumentationController : controller.refreshTrainingController,
+              child: GetBuilder<CartController>(
           builder: (controller) => Column(
             children: [
               Stack(
@@ -114,7 +126,7 @@ class _RecruitingScreenState extends State<RecruitingScreen> {
                               fontSize: 18,
                               color: AppColors.primaryColor,
                               overflow: TextOverflow.ellipsis),
-                          addRegularTxt('12 chapters',
+                          addRegularTxt('${cartSubCategoryItemsData?.documentsCount} chapters',
                               fontSize: 14,
                               color: AppColors.txtFieldLabelColor)
                         ],
@@ -153,7 +165,10 @@ class _RecruitingScreenState extends State<RecruitingScreen> {
               ).marginSymmetric(horizontal: 20),
               addHeight(20),
               if (controller.selectedTabIndex == 0)
-                const Expanded(child: DocumentationWidget()),
+               Expanded(child: 
+              const DocumentationWidget(),),
+                // const Expanded(
+                //   child: ),
               // ListView.builder(
               //     shrinkWrap: true,
               //     padding: EdgeInsets.zero,
@@ -166,13 +181,36 @@ class _RecruitingScreenState extends State<RecruitingScreen> {
               //     }),
               if (controller.selectedTabIndex == 1)
                 // const Expanded(child: TrainingWidget()),
-                Expanded(child: ListView.builder(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.zero,
-                    physics: const ScrollPhysics(),
-                    itemCount: controller.recruitingList.length,
-                    itemBuilder: (context, int index) {
-                      return Stack(
+                Expanded(child: 
+                ListView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: List.generate(controller.recruitingList.length, (index) {
+                    return tileViewUi(controller.recruitingList[index]); 
+                  }),
+                )),
+                // ListView.builder(
+                  
+                //     shrinkWrap: true,
+                //     padding: EdgeInsets.zero,
+                //     physics: const ScrollPhysics(),
+                //     itemCount: controller.recruitingList.length,
+                //     itemBuilder: (context, int index) {
+                //       return 
+                //     })),
+              addHeight(20),
+            ],
+          )))),
+      bottomNavigationBar: const NavBar2(),
+    );
+  }
+   tileViewUi(var data){
+    // bool download = false;
+    // int dlValue = 0;
+    // //  int i = 0;
+    return  StatefulBuilder(
+    builder: (context, setState) {
+        return
+  Stack(
                         children: [
                           Container(
                             decoration: BoxDecoration(
@@ -189,14 +227,14 @@ class _RecruitingScreenState extends State<RecruitingScreen> {
                                     CrossAxisAlignment.start,
                                     children: [
                                       addBoldTxt(
-                                          '${controller.recruitingList[index]['title']}',
+                                          '${data['title']}',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           fontSize: 16,
                                           color: AppColors.primaryColor,
                                           fontWeight: FontWeight.w500),
                                       addRegularTxt(
-                                          '${controller.recruitingList[index]['subTitle']}',
+                                          '${data['subTitle']}',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           fontSize: 12,
@@ -205,14 +243,14 @@ class _RecruitingScreenState extends State<RecruitingScreen> {
                                   ).paddingOnly(left: 20.sp),
                                 ),
                                 const Spacer(),
-                                if (controller.recruitingList[index]
+                                if (data
                                 ['isImage'])
                                   SizedBox(
                                       height: 48.h,
                                       child: SvgPicture.asset(
                                           AppAssets.pdfIcon)
                                           .marginOnly(right: 16)),
-                                if (controller.recruitingList[index]
+                                if (data
                                 ['isButton'])
                                   CustomIconButton(
                                     icon: AppAssets.trolleyIcon,
@@ -258,19 +296,12 @@ class _RecruitingScreenState extends State<RecruitingScreen> {
                             top: 0,
                             bottom: 0,
                             // left: 0,
-                            child: SvgPicture.asset(controller
-                                .recruitingList[index]['isFav'] ==
+                            child: SvgPicture.asset(data['isFav'] ==
                                 true
                                 ? AppAssets.starFillIcon
                                 : AppAssets.starUnFillIcon),
                           ),
                         ],
                       ).marginOnly(left: 8, right: 16, bottom: 10.sp);
-                    })),
-              addHeight(20),
-            ],
-          )),
-      bottomNavigationBar: const NavBar2(),
-    );
-  }
+    });}
 }

@@ -132,9 +132,9 @@ class _ProfileState extends State<Profile> {
                                 ),
                               ),
                               addHeight(10),
-                              subScreen("About Me", () {
-                                Get.to(const AboutMe());
-                              }),
+                              // subScreen("About Me", () {
+                              //   Get.to(const AboutMe());
+                              // }),
                               subScreen("Change Password", () {
                                 Get.to(const ChangePassword());
                               }),

@@ -15,8 +15,8 @@ import '../controllers/payroll_flow_chart_controller.dart';
 import '../controllers/signUp_controller.dart';
 
 Future<void> init() async{
-
-    Get.lazyPut<SplashController>(() => SplashController(), fenix: true);
+  Get.lazyPut<SplashController>(() => SplashController(), fenix: true);
+    // Get.lazyPut<SplashController>(() => SplashController(), fenix: true);
   Get.lazyPut<LoginController>(() => LoginController(), fenix: true);
   Get.lazyPut<SignUpController>(() => SignUpController(), fenix: true);
   Get.lazyPut<PayRollFlowChartController>(() => PayRollFlowChartController(), fenix: true);
@@ -25,8 +25,9 @@ Future<void> init() async{
   Get.put(YourItemsController());
   Get.put(RecruitingController());
   Get.put(ProfileController());
+  Get.put(CartController());
   Get.lazyPut<DiscoverController>(() => DiscoverController(), fenix: true);
-  Get.lazyPut<CartController>(() => CartController(), fenix: true);
+  // Get.lazyPut<CartController>(() => CartController(), fenix: true);
   Get.put(CategoryController());
   // Get.lazyPut<ProfileController>(() => ProfileController(), fenix: true);
 

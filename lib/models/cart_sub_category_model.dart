@@ -57,15 +57,17 @@ class CartSubCategoryItemsData {
   String? title;
   int? parentId;
   String? image;
+  int? documentsCount;
   Parent? parent;
 
-  CartSubCategoryItemsData({this.id, this.title, this.parentId, this.image, this.parent});
+  CartSubCategoryItemsData({this.id, this.title, this.parentId,this.documentsCount, this.image, this.parent});
 
   CartSubCategoryItemsData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
-    parentId = json['parent_id'];
+    parentId = json['parent_id'];    
     image = json['image'];
+    documentsCount = json['documents_count'];
     parent =
     json['parent'] != null ? Parent.fromJson(json['parent']) : null;
   }
@@ -75,6 +77,7 @@ class CartSubCategoryItemsData {
     data['id'] = id;
     data['title'] = title;
     data['parent_id'] = parentId;
+    data['documents_count'] = documentsCount;
     data['image'] = image;
     if (parent != null) {
       data['parent'] = parent!.toJson();

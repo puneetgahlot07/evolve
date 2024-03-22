@@ -1,9 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:evolve/Screens/other/all_category.dart';
 import 'package:evolve/common-widgets/custom_card.dart';
 import 'package:evolve/controllers/cart_conntroller.dart';
 
 // import 'package:evolve/common-widgets/custom_textfield.dart';
 import 'package:evolve/controllers/discover_controller.dart';
+import 'package:evolve/models/purchased_list_model.dart';
 import 'package:evolve/resources/app_assets.dart';
 import 'package:evolve/resources/text_utility.dart';
 import 'package:evolve/routers/app_routers.dart';
@@ -215,7 +217,7 @@ class _SubScriptionOwnershipState extends State<SubScriptionOwnership> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          addRegularTxt('My PDf',
+                          addRegularTxt('My Subscriptions',
                               color: AppColors.blackColor, fontSize: 17.sp),
                           InkWell(
                               onTap: () {
@@ -241,30 +243,8 @@ class _SubScriptionOwnershipState extends State<SubScriptionOwnership> {
                                 ),
                                 delegate: SliverChildBuilderDelegate(
                                   (BuildContext context, int index) {
-                                    return Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10.0.sp, vertical: 8.sp),
-                                      child: CustomCard(
-                                          title: controller
-                                                  .purchasedItemsData[index]
-                                                  .document
-                                                  ?.name ??
-                                              '',
-                                          des: controller
-                                                  .purchasedItemsData[index]
-                                                  .document
-                                                  ?.description ??
-                                              '',
-                                          img: controller
-                                                  .purchasedItemsData[index]
-                                                  .document
-                                                  ?.image ??
-                                              '',
-                                          onTap: () {
-                                            Get.toNamed(
-                                                AppRoutes.chooseCategoryScreen);
-                                          }),
-                                    );
+                                    return MyCard(controller
+                                              .purchasedItemsData[index]);
                                   },
                                   childCount: controller
                                               .purchasedItemsData.length >
@@ -281,11 +261,72 @@ class _SubScriptionOwnershipState extends State<SubScriptionOwnership> {
                                             MediaQuery.of(context).size.height *
                                                 0.2),
                                     child:
-                                        noRecordAvailable(msg: 'No PDF Found')),
+                                        noRecordAvailable(msg: 'No Record Found!!')),
                               ))
                   ],
                 ))));
   }
+MyCard(PurchasedItemsData data){
+    bool download = false;
+    int dlValue = 0; 
+  return   StatefulBuilder(
+    builder: (context, setState) {
+      return Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10.0.sp, vertical: 8.sp),
+                                          child: download ? Center(
+                                            child: CircularProgressIndicator(
+                                              value: double.parse(dlValue.toString()) /100,
+                                            ),
+                                          ): CustomCard(
+                                              title: data
+                                                      .document
+                                                      ?.name ??
+                                                  '',
+                                              des: data
+                                                      .document
+                                                      ?.description ??
+                                                  '',
+                                              img:data
+                                                      .document
+                                                      ?.image ??
+                                                  '',
+                                              onTap: () async {
+                                                 bool res =  await yourItemController.downloadFile(data.document!.pdfPath!);
+                                   if(res){                                    
+                                        setState(() { 
+                                          download = true;                                     
+                                        });                                                                      
+                                        
+                                     try {  
+                                      String url = data.document!.pdfPath!;
+                                      String  pdfName =  yourItemController.dirloc + url.split("/").last;
+                                       Dio dio = Dio();
+              
+                await dio.download(
+                  url, pdfName,
+                    onReceiveProgress: (receivedBytes, totalBytes) {                       
+                 setState(() { 
+                  dlValue = int.parse(((receivedBytes / totalBytes) * 100).toStringAsFixed(0)) ;
+                  });     
+                  if(receivedBytes == totalBytes ){
+                     setState(() { 
+                      download = false;
+                     });
+                  }                    
+                });
+              } catch (e) {
+                print('catch catch catch');
+                print(e);
+              }
+                                   }
+                                                // Get.toNamed(
+                                                //     AppRoutes.chooseCategoryScreen);
+                                              }),
+                                        );
+    }
+  );
+ }
 }
 
 class MyFlexiableAppBar extends StatelessWidget {

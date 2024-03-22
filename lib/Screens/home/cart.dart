@@ -18,7 +18,8 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
-  final controller = Get.put(CartController());
+  // final controller = Get.put(CartController());
+  final controller = Get.find<CartController>();
 
   @override
   Widget build(BuildContext context) {
