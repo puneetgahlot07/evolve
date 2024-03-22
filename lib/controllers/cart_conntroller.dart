@@ -39,40 +39,37 @@ class CartController extends GetxController
   void onInit() {
     super.onInit();
     controller = TabController(vsync: this, length: myTabs.length);
-    // getCategoryApi();
-    // getCartListApi();
-// 
   }
 
-  Future<void> getCartListApi() async {
+  Future<void> getCartListApi({isShowLoader = true}) async {
     checkInternetConnectivity().then((isConnected) async {
       if (isConnected) {
-       
         try {
-           showLoader(true);
+          isShowLoader ? showLoader(true) : null;
           var map = <String, dynamic>{};
           map['page'] = '1';
           map['limit'] = '100';
-          map['search'] = '';
 
           var result =
               await ApiHandler().PostApi(apiName: ApiUrls.cart, data: map);
-              log(result.toString());
+              log('cart ---> ${result.toString()}');
           if (result != null) {
             if (result['success'] == true) {
               cartListItems.clear();
-              cartListItems
-                  .addAll(CartListModel.fromJson(result).data?.items ?? []);
+              print('Cart Item --- > ${cartListItems.length}');
+              log('Cart Item --- > ${cartListItems.length}');
+              cartListItems.addAll(CartListModel.fromJson(result).data?.items ?? []);
+              print('Cart Item --- > ${cartListItems.length}');
               update();
             }
           }
-          showLoader(false);
+          isShowLoader ? showLoader(false) : null;
         } catch (e) {
          
           log("catch");
 
           log(e.toString());
-           showLoader(false);
+          isShowLoader ? showLoader(false) : null;
           showToastError(
             e.toString(),
           );
@@ -80,7 +77,7 @@ class CartController extends GetxController
         }
       } else {
         showToastError('No Internet'.tr);
-        showLoader(false);
+        isShowLoader ? showLoader(false) : null;
       }
     });
   }
@@ -135,6 +132,7 @@ class CartController extends GetxController
 
           var result =
               await ApiHandler().PostApi(apiName: ApiUrls.addCart, data: map);
+          print('Cart Add ---  > ${result}');
           if (result != null) {
             showToastError(result['message']);
           }
@@ -222,7 +220,7 @@ class CartController extends GetxController
       // String url = "https://v5.checkprojectstatus.com/evolve/public/documents/pdf/1710840089.pdf";
       var pdfName ="$dirloc" + url.split("/").last;
       if (await File(pdfName).exists()){     
-        Get.to(PdfViewPage(filePath: pdfName));
+        Get.to(()=> PdfViewPage(filePath: pdfName));
         return false;
       }
      else{  

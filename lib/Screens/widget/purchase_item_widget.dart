@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:evolve/models/purchased_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,7 +48,43 @@ class PurchaseItemWidget extends StatelessWidget {
   }
 
   Widget buildPurchasedView(PurchasedItemsData itemsFav) {
-    return Container(
+    bool download = false;
+    int dlValue = 0;
+    return InkWell(onTap: () async {
+      bool res = await controller
+          .downloadFile(itemsFav.document!.pdfPath!);
+      if (res) {
+        // setState(() {
+          download = true;
+        // });
+
+        try {
+          String url = itemsFav.document!.pdfPath!;
+          String pdfName =
+              controller.dirloc + url.split("/").last;
+          Dio dio = Dio();
+
+          await dio.download(url, pdfName,
+              onReceiveProgress: (receivedBytes, totalBytes) {
+                // setState(() {
+                  dlValue = int.parse(
+                      ((receivedBytes / totalBytes) * 100)
+                          .toStringAsFixed(0));
+                // });
+                if (receivedBytes == totalBytes) {
+                  // setState(() {
+                    download = false;
+                  // });
+                }
+              });
+        } catch (e) {
+          print('catch catch catch');
+          print(e);
+        }
+      }
+      // Get.toNamed(
+      //     AppRoutes.chooseCategoryScreen);
+    }, child: Container(
       decoration: BoxDecoration(
           // color: Colors.green,
           borderRadius: BorderRadius.circular(15),
@@ -98,6 +135,6 @@ class PurchaseItemWidget extends StatelessWidget {
       left: 20,
       right: 20,
       bottom: 10,
-    );
+    ));
   }
 }

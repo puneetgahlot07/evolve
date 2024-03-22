@@ -177,7 +177,7 @@ Future<void> getPurchasedListApi() async {
       // String url = "https://v5.checkprojectstatus.com/evolve/public/documents/pdf/1710840089.pdf";
       var pdfName ="$dirloc" + url.split("/").last;
       if (await File(pdfName).exists()){     
-        Get.to(PdfViewPage(filePath: pdfName));
+        Get.to(()=> PdfViewPage(filePath: pdfName));
         return false;
       }
      else{  

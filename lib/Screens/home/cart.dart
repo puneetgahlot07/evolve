@@ -21,6 +21,12 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   // final controller = Get.put(CartController());
   final controller = Get.find<CartController>();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.getCartListApi();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,33 +47,18 @@ class _CartState extends State<Cart> {
               },
               controller: controller.refreshCartController,
               child: GetBuilder<CartController>(
-                  builder: (controller) => Column(
-                        children: [
-                          addHeight(16),
-                          controller.cartListItems.isNotEmpty
-                              ? Expanded(
-                                  child: ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: const ScrollPhysics(),
-                                      itemCount:
-                                          controller.cartListItems.length,
-                                      itemBuilder: (context, int index) {
-                                        return buildCartView(
-                                            controller.cartListItems[index]);
-                                      }),
-                                )
-                              : Center(
-                                  child: Padding(
-                                      padding: EdgeInsets.only(
-                                          top: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.2),
-                                      child: noRecordAvailable(
-                                          msg: 'No Data Found')),
-                                ),
-                        ],
-                      )))),
+                  builder: (controller) => controller.cartListItems.isNotEmpty
+                      ? ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount:
+                      controller.cartListItems.length,
+                      itemBuilder: (context, int index) {
+                        return buildCartView(
+                            controller.cartListItems[index]);
+                      })
+                      : Center(child:  noRecordAvailable(msg: 'No Data Found'),
+                  )))),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: GetBuilder<CartController>(
     builder: (controller) => controller.cartListItems.isNotEmpty ? CustomButton(
